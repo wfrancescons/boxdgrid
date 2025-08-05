@@ -1,14 +1,12 @@
+import { LOGO, REVIEW, REWATCH } from "./images.ts";
+
 import type {
   CanvasElement,
+  FillStyle,
   ImageElement,
   RectangleElement,
   TextElement,
 } from "./render.ts";
-
-const REWATCH =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAWdJREFUeNrkVdFxwjAMxT0GyAjZoBnBTEC6QboBI6QTeITQCWADuoFhArIBYQJXOuQ7nSs7ovSjvfrunWNHtizpSVos/s0IIdSADeAAOIfbuNDaARpBvgdYzeUVYAi6cYjK8HLa6+Ndy4wCPLAD1LQ1AfaAE+BI+8+Alr7x1R7OvcI8aixoyB1xoOlVQb5L5IfUEslF3O9WGTc85xMXZt21YS56McZ8zJECpo6WKNtoXhPNHpQW2AIZREswiNH3b0qGIwlWmX+j9CpHL/A/nWtP7Lthvn00gTF521KeXB9UgIx0tDSpknea93+h1vUU2/MXdxHn6xyLIGcmpZ51NrbsBdKw38ibrlggWWxOWc4LycwCPoLlW40lvlQYhfO8LbRzAXNMeLZIUpPixdFpWGGpfKdNqYsKqR20QlMbtNTjF3llZ7xkXSQwoycqp01pl7ncUwkpxs7cmWgV1bgJ2HP8VVXgU4ABAJQnYhyEs15AAAAAAElFTkSuQmCC";
-const REVIEW =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAFZJREFUeNpiYBgFgxL8//9//3/agP0g81mg9lygkfsvjEbhoIh4B3TzmUaDeGTm+NGIH3yAERrx/UDKgAz9hYyMjARLWlhRD7LAgQxLBEbjaWgCgAADAFhGDDaDeAIyAAAAAElFTkSuQmCC";
 
 interface Config {
   POSTER_WIDTH: number;
@@ -60,16 +58,12 @@ function createRectangleElement(
   return { type: "rectangle", fillStyle, x, y, width, height };
 }
 
-function createTextElement({
-  text,
-  x,
-  y,
-  font,
-  fillStyle,
-  shadow,
-  maxWidth,
-  lineHeight,
-}: Omit<TextElement, "type">): TextElement {
+function createTextElement(
+  { text, x, y, font, fillStyle, shadow, maxWidth, lineHeight }: Omit<
+    TextElement,
+    "type"
+  >,
+): TextElement {
   return {
     type: "text",
     text,
@@ -88,18 +82,20 @@ function createGradientRectangle(
   y: number,
   config: Config,
 ): RectangleElement {
+  const fillStyle: FillStyle = {
+    type: "linearGradient",
+    colors: [
+      { stop: 0, color: "rgba(14, 14, 14, 0)" },
+      { stop: 1, color: "rgba(14, 14, 14, 0.9)" },
+    ],
+    x0: x,
+    y0: y + config.POSTER_HEIGHT - config.GRADIENT_HEIGHT,
+    x1: x,
+    y1: y + config.POSTER_HEIGHT,
+  };
+
   return createRectangleElement({
-    fillStyle: {
-      type: "linearGradient",
-      colors: [
-        { stop: 0, color: "rgba(14, 14, 14, 0)" },
-        { stop: 1, color: "rgba(14, 14, 14, 0.9)" },
-      ],
-      x0: x,
-      y0: y + config.POSTER_HEIGHT - config.GRADIENT_HEIGHT,
-      x1: x,
-      y1: y + config.POSTER_HEIGHT,
-    },
+    fillStyle,
     x,
     y: y + config.POSTER_HEIGHT - config.GRADIENT_HEIGHT,
     width: config.POSTER_WIDTH,
@@ -213,9 +209,49 @@ function generatePosterData(
   return posterElements;
 }
 
+function generateWatermark(
+  data: { width: number; height: number },
+): CanvasElement[] {
+  const elements: CanvasElement[] = [];
+
+  if (data.width > 230) {
+    elements.push(createImageElement({
+      src: LOGO,
+      x: 15,
+      y: data.height - 30 - 11,
+      width: 120,
+      height: 22,
+    }));
+  }
+
+  elements.push(createTextElement({
+    text: "boxdgrid.deno.dev",
+    x: data.width - 200,
+    y: data.height - 22,
+    font: `bold 20px "Noto Sans JP", sans-serif`,
+    fillStyle: "#dcdbdc",
+    shadow: {
+      color: "rgba(0, 0, 0, 0.5)",
+      offsetX: 2,
+      offsetY: 2,
+      blur: 4,
+    },
+    maxWidth: 200,
+    lineHeight: 20,
+  }));
+
+  return elements;
+}
+
 function gridlbTemplate(
   { lastFilms, columns, rows, param = null }: GridTemplateProps,
-) {
+): {
+  type: "grid";
+  width: number;
+  height: number;
+  background: string;
+  elements: CanvasElement[];
+} {
   const config: Config = {
     POSTER_WIDTH: 230,
     POSTER_HEIGHT: 345,
@@ -230,18 +266,25 @@ function gridlbTemplate(
     RATING_FONT_SIZE: 23,
   };
 
+  const width = columns * config.POSTER_WIDTH;
+  const height = rows * config.POSTER_HEIGHT + 60;
+
   const data = {
     type: "grid" as const,
-    width: columns * config.POSTER_WIDTH,
-    height: rows * config.POSTER_HEIGHT,
+    width,
+    height,
     background: "#0E0E0E",
     elements: [] as CanvasElement[],
   };
+
+  const watermark = generateWatermark(data);
 
   lastFilms.forEach((film, i) => {
     const posterElements = generatePosterData(film, i, columns, param, config);
     data.elements.push(...posterElements);
   });
+
+  data.elements.push(...watermark);
 
   return data;
 }

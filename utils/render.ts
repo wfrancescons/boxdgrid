@@ -14,7 +14,7 @@ interface LinearGradientFill {
   colors: { stop: number; color: string }[];
 }
 
-type FillStyle = string | LinearGradientFill;
+export type FillStyle = string | LinearGradientFill;
 
 interface BaseElement {
   x: number;
