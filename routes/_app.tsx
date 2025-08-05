@@ -1,12 +1,20 @@
 import { type PageProps } from "$fresh/server.ts";
 export default function App({ Component }: PageProps) {
   return (
-    <html data-theme="letterboxd" translate={false} className="notranslate">
+    <html translate={false} className="notranslate">
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="google" content="notranslate" />
         <title>boxdgrid – Letterboxd Collage Generator</title>
+        <meta
+          name="description"
+          content="Create grid-style collages from the films you've logged on Letterboxd. Choose your grid dimensions, display ratings and titles, and share your personalized movie collage with friends. Perfect for showcasing your recent watches, favorites, or themed lists in a visual and organized way."
+        />
+        <meta
+          name="google-site-verification"
+          content="IcY_PH21oBJFheavxicQ_xKuV6KvhYU4EVZPWRBY85Q"
+        />
 
         <meta
           property="og:title"
@@ -18,11 +26,11 @@ export default function App({ Component }: PageProps) {
         />
         <meta
           property="og:image"
-          content="/og-image.jpg"
+          content="https://boxdgrid.deno.dev/og-image.jpg"
         />
         <meta property="og:url" content="https://boxdgrid.deno.dev/" />
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="BoxdGrid" />
+        <meta property="og:site_name" content="boxdgrid" />
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -41,7 +49,7 @@ export default function App({ Component }: PageProps) {
           data-website-id="ca4babd8-9261-4409-a918-53e5219b7777"
         />
       </head>
-      <body>
+      <body data-theme="letterboxd">
         <Component />
       </body>
     </html>
