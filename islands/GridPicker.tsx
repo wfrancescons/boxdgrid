@@ -58,6 +58,7 @@ export default function GridPicker({ grid }: GridPickerProps) {
   const selectedPreset = useSignal<PresetKey>("pickPreset");
 
   const isDragging = useRef<boolean>(false);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   function getPresetKey(r: number, c: number): PresetKey {
     for (
@@ -102,6 +103,43 @@ export default function GridPicker({ grid }: GridPickerProps) {
     }
   }
 
+  function getCellFromPosition(
+    clientX: number,
+    clientY: number,
+  ): { row: number; col: number } | null {
+    if (!gridRef.current) return null;
+
+    const gridRect = gridRef.current.getBoundingClientRect();
+    const relativeX = clientX - gridRect.left;
+    const relativeY = clientY - gridRect.top;
+
+    const cellWidth = gridRect.width / cols;
+    const cellHeight = gridRect.height / rows;
+
+    const col = Math.ceil(relativeX / cellWidth);
+    const row = Math.ceil(relativeY / cellHeight);
+
+    if (row >= 1 && row <= rows && col >= 1 && col <= cols) {
+      return { row, col };
+    }
+
+    return null;
+  }
+
+  function handleTouchMove(e: TouchEvent): void {
+    if (!isDragging.current) return;
+
+    e.preventDefault();
+
+    const touch = e.touches[0];
+    if (!touch) return;
+
+    const cell = getCellFromPosition(touch.clientX, touch.clientY);
+    if (cell) {
+      handleSelection(cell.row, cell.col);
+    }
+  }
+
   const currentHoverAnchorColor = (): ColorClass | null => {
     if (hoverRow.value > 0 && hoverCol.value > 0) {
       return hoverAnchorGrid[hoverRow.value - 1]?.[hoverCol.value - 1] || null;
@@ -111,7 +149,6 @@ export default function GridPicker({ grid }: GridPickerProps) {
 
   return (
     <div className="flex flex-col w-full mx-auto space-y-1" translate={false}>
-      {/* Cabeçalho */}
       <div className="flex items-center justify-between">
         <p className="text-sm font-medium flex gap-0.5 items-center">
           Grid:
@@ -131,8 +168,8 @@ export default function GridPicker({ grid }: GridPickerProps) {
         </p>
       </div>
 
-      {/* Grade */}
       <div
+        ref={gridRef}
         className="grid grid-cols-7 gap-1 w-full py-1 touch-none select-none"
         translate={false}
         onPointerUp={() => {
@@ -146,6 +183,13 @@ export default function GridPicker({ grid }: GridPickerProps) {
             hoverRow.value = selected.value.rows;
             hoverCol.value = selected.value.cols;
           }
+        }}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={() => {
+          isDragging.current = false;
+        }}
+        onTouchCancel={() => {
+          isDragging.current = false;
         }}
       >
         {Array.from({ length: rows }, (_, i) =>
@@ -167,19 +211,24 @@ export default function GridPicker({ grid }: GridPickerProps) {
             return (
               <div
                 key={`${row}-${col}`}
-                onPointerDown={() => {
+                onPointerDown={(e) => {
+                  e.preventDefault();
                   isDragging.current = true;
                   handleSelection(row, col);
                 }}
                 onPointerEnter={() =>
                   handleCellEnter(row, col)}
-                className={`w-full aspect-[4/5] rounded-xs cursor-pointer transition duration-200 ease-in-out transform hover:scale-110 hover:shadow-md/30 ${bgColor}`}
+                onTouchStart={(e) => {
+                  e.preventDefault();
+                  isDragging.current = true;
+                  handleSelection(row, col);
+                }}
+                className={`w-full aspect-[4/5] rounded-xs cursor-pointer transition duration-200 ease-in-out transform hover:scale-110 hover:shadow-md/30 active:scale-105 ${bgColor}`}
               />
             );
           }))}
       </div>
 
-      {/* Presets */}
       <div className="filter">
         <input
           className="btn filter-reset btn-sm lg:btn-xs"
