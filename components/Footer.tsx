@@ -33,7 +33,7 @@ export default function Footer() {
               alt="Ko-fi"
               className="inline-block h-3 w-4"
             />
-            Support me on Ko-fi
+            Support on Ko-fi
           </a>
           <div className="divider divider-horizontal m-0" />
           <div className="grid grid-flow-col gap-4">
