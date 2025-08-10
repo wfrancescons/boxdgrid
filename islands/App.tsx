@@ -1,4 +1,5 @@
 import { Signal, useComputed, useSignal } from "@preact/signals";
+import { JSX } from "preact";
 import { useRef } from "preact/hooks";
 
 import Footer from "../components/Footer.tsx";
@@ -10,17 +11,16 @@ import renderCanvas from "../utils/render.ts";
 import gridlbTemplate from "../utils/template.ts";
 import GridPicker from "./GridPicker.tsx";
 
-export default function App() {
-  const letterboxdUsername = useSignal("");
-  const showTitlesAndRating = useSignal(true);
-  const grid = useSignal({ rows: 0, cols: 0 });
+type Grid = { rows: number; cols: number };
 
-  const isLoading = useSignal(false);
-  const hasImage = useSignal(false);
-  const collage: Signal<string | undefined> = useSignal(
-    "/home-grid.png",
-  );
-  const apiError = useSignal("");
+export default function App() {
+  const letterboxdUsername = useSignal<string>("");
+  const showTitlesAndRating = useSignal<boolean>(true);
+  const grid = useSignal<Grid>({ rows: 0, cols: 0 });
+  const isLoading = useSignal<boolean>(false);
+  const hasImage = useSignal<boolean>(false);
+  const collage: Signal<string | undefined> = useSignal("/home-grid.webp");
+  const apiError = useSignal<string>("");
 
   const canGenerate = useComputed(() =>
     letterboxdUsername.value !== "" &&
@@ -29,80 +29,80 @@ export default function App() {
   );
 
   const modalRef = useRef<HTMLDialogElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
 
-  const openModal = () => {
-    modalRef.current?.showModal();
+  const openModal = () => modalRef.current?.showModal();
+
+  const scrollToImage = () => {
+    queueMicrotask(() => {
+      imageRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
   };
 
-  function generateCollage() {
-    return async () => {
-      isLoading.value = true;
-      hasImage.value = false;
+  async function generateCollage() {
+    isLoading.value = true;
+    hasImage.value = false;
+    apiError.value = "";
 
-      apiError.value = "";
+    const columns = grid.value.cols;
+    const rows = grid.value.rows;
 
-      try {
-        const param = showTitlesAndRating.value ? null : "notexts";
+    try {
+      const param = showTitlesAndRating.value ? null : "notexts";
 
-        const res = await fetch(
-          `/api/letterboxd/${letterboxdUsername.value}?limit=${
-            grid.value.rows * grid.value.cols
-          }`,
-        );
+      const res = await fetch(
+        `/api/letterboxd/${letterboxdUsername.value}?limit=${columns * rows}`,
+      );
 
-        if (res.status === 404) {
-          apiError.value = "Username not found.";
-          return;
-        }
-
-        if (res.status === 204) {
-          apiError.value = "No diary entries found.";
-          return;
-        }
-
-        if (!res.ok) {
-          apiError.value = "Something went wrong.";
-          throw new Error(`Error: ${res.status}`);
-        }
-
-        const lastFilms = await res.json();
-
-        const letterboxdTemplate = gridlbTemplate({
-          lastFilms,
-          columns: grid.value.cols,
-          rows: grid.value.rows,
-          param,
-        });
-
-        const image = await renderCanvas(letterboxdTemplate);
-        collage.value = image;
-
-        hasImage.value = true;
-
-        if (globalThis.innerWidth < 768) {
-          setTimeout(() => {
-            const imgCard = document.querySelector(".card-body img");
-            if (imgCard) {
-              imgCard.scrollIntoView({ behavior: "smooth", block: "center" });
-            }
-          }, 100);
-        }
-      } catch (err) {
-        console.error("Erro ao gerar imagem:", err);
-      } finally {
-        isLoading.value = false;
+      if (res.status === 404) {
+        apiError.value = "Username not found.";
+        return;
       }
-    };
+
+      if (res.status === 204) {
+        apiError.value = "No diary entries found.";
+        return;
+      }
+
+      if (!res.ok) {
+        apiError.value = "Something went wrong.";
+        throw new Error(`Error: ${res.status}`);
+      }
+
+      const lastFilms = await res.json();
+
+      const letterboxdTemplate = gridlbTemplate({
+        lastFilms,
+        columns,
+        rows,
+        param,
+      });
+
+      const image = await renderCanvas(letterboxdTemplate);
+      collage.value = image;
+
+      hasImage.value = true;
+
+      if (globalThis.innerWidth < 768) scrollToImage();
+    } catch (err) {
+      console.error("Erro ao gerar imagem:", err);
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   function downloadCanvasImage() {
     const link = document.createElement("a");
     link.download = "letterboxd-collage.png";
-    link.href = collage.value;
+    link.href = collage.value!;
     link.click();
     setTimeout(() => {
       openModal();
     }, 700);
+  }
+
+  function saveUsername(e: JSX.TargetedEvent<HTMLInputElement, Event>) {
+    letterboxdUsername.value = e.currentTarget.value.trim();
   }
 
   return (
@@ -133,9 +133,7 @@ export default function App() {
                         class="grow"
                         name="letterboxd-username"
                         placeholder="Letterboxd username"
-                        onChange={(
-                          e,
-                        ) => (letterboxdUsername.value = e.target.value.trim())}
+                        onChange={saveUsername}
                       />
                     </label>
 
@@ -175,7 +173,7 @@ export default function App() {
                         <button
                           type="button"
                           class="btn btn-primary btn-block md:btn-sm"
-                          onClick={generateCollage()}
+                          onClick={generateCollage}
                           disabled={!canGenerate.value}
                           data-umami-event="Generate button"
                         >
@@ -201,8 +199,9 @@ export default function App() {
                       )
                       : (
                         <img
+                          ref={imageRef}
                           src={collage.value}
-                          alt="Collage"
+                          alt="Letterboxd collage"
                           className="rounded-md w-auto h-auto max-h-[65vh] object-contain pointer-events-none"
                         />
                       )}
@@ -252,7 +251,8 @@ export default function App() {
           </a>
           <div className="divider" />
           <p className="pb-4">
-            Enjoying it? Support the project and help keep it online:
+            <span className="font-bold">This project is free and ad-free!</span>
+            {"  "}If you can, support boxdgrid to help keep it online:
           </p>
           <a
             className="btn btn-block bg-indigo-400 text-white border-indigo-400 flex items-center gap-2"
@@ -265,7 +265,7 @@ export default function App() {
               alt="Ko-fi"
               className="inline-block h-4 w-5"
             />
-            Support me on Ko-fi
+            Support on Ko-fi
           </a>
         </div>
         <form method="dialog" className="modal-backdrop">
