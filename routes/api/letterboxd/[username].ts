@@ -1,5 +1,5 @@
 import { FreshContext } from "$fresh/server.ts";
-import { getLastFilmsSeen } from "../../../utils/letterboxd.ts";
+import { getLastFilmsSeen } from "../../../services/letterboxd.ts";
 
 async function fetchImageAsDataURI(url: string): Promise<string> {
   try {

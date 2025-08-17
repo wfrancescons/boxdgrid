@@ -177,10 +177,10 @@ async function drawText(
 
 export default async function renderCanvas(
   data: RenderData,
-): Promise<string | undefined> {
+): Promise<string> {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
-  if (!ctx) return;
+  if (!ctx) return "";
 
   canvas.width = data.width;
   canvas.height = data.height;
