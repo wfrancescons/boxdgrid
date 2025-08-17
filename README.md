@@ -1,5 +1,4 @@
-<img src="./static/favicon.ico" alt="boxdgrid logo" height="40">
-<h1 style="display: inline">boxdgrid</h1>
+# <img src="./static/favicon.ico" alt="logo" height="30"> boxdgrid
 
 Generate grid-style collages of your latest Letterboxd watches.
 
@@ -29,5 +28,5 @@ Built with **Deno Fresh**, **daisyUI** and **Tailwind CSS**.
 👉 If you like this project, consider supporting it on:
 
 <a href="https://ko-fi.com/wfrancescons" target="_blank">
-  <img src="https://storage.ko-fi.com/cdn/kofi2.png?v=6" height="40" alt="Buy Me a Coffee at ko-fi.com">
+  <img src="https://storage.ko-fi.com/cdn/kofi2.png?v=6" height="35" alt="Buy Me a Coffee at ko-fi.com">
 </a>
