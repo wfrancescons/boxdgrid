@@ -7,6 +7,7 @@ import ResultFigure from "../components/figures/ResultFigure.tsx";
 import WelcomeFigure from "../components/figures/WelcomeFigure.tsx";
 import Footer from "../components/Footer.tsx";
 import Header from "../components/Header.tsx";
+import CopiedModal from "../components/modals/CopiedModal.tsx";
 import DownloadModal from "../components/modals/DownloadModal.tsx";
 import CollageForm from "./CollageForm.tsx";
 import ResultCardActions from "./ResultCardActions.tsx";
@@ -17,6 +18,7 @@ export default function App() {
   const collage = useSignal<string>("");
 
   const downloadModalToggle = useSignal<boolean>(false);
+  const copiedModalToggle = useSignal<boolean>(false);
 
   const resultRef = useRef<HTMLImageElement>(null);
 
@@ -72,7 +74,10 @@ export default function App() {
 
                       <ResultCardActions
                         imageSrc={collage}
-                        modalToggle={downloadModalToggle}
+                        modals={{
+                          download: downloadModalToggle,
+                          copied: copiedModalToggle,
+                        }}
                       />
                     </>
                   )}
@@ -83,6 +88,7 @@ export default function App() {
         </main>
       </div>
       <DownloadModal toggle={downloadModalToggle} />
+      <CopiedModal toggle={copiedModalToggle} />
       <Footer />
     </>
   );

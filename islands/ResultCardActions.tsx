@@ -6,11 +6,14 @@ import DownloadIcon from "../components/icons/DownloadIcon.tsx";
 
 interface ResultCardActionsProps {
   imageSrc: Signal<string>;
-  modalToggle: Signal<boolean>;
+  modals: {
+    download: Signal<boolean>;
+    copied: Signal<boolean>;
+  };
 }
 
 export default function ResultCardActions(
-  { imageSrc, modalToggle }: ResultCardActionsProps,
+  { imageSrc, modals }: ResultCardActionsProps,
 ) {
   const isCopied = useSignal<boolean>(false);
 
@@ -20,7 +23,7 @@ export default function ResultCardActions(
     link.href = imageSrc.value!;
     link.click();
     setTimeout(() => {
-      modalToggle.value = true;
+      modals.download.value = true;
     }, 700);
   }
 
@@ -38,7 +41,8 @@ export default function ResultCardActions(
 
     setTimeout(() => {
       isCopied.value = false;
-    }, 1500);
+      modals.copied.value = true;
+    }, 1000);
   }
 
   return (

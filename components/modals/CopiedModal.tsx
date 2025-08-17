@@ -1,12 +1,12 @@
 import { Signal } from "@preact/signals";
-import TelegramIcon from "./../icons/TelegramIcon.tsx";
+import TelegramIcon from "../icons/TelegramIcon.tsx";
 
-interface DownloadModalProps {
+interface CopiedModalProps {
   toggle: Signal<boolean>;
 }
 
-export default function DownloadModal(
-  { toggle }: DownloadModalProps,
+export default function CopiedModal(
+  { toggle }: CopiedModalProps,
 ) {
   return (
     <dialog className="modal" open={toggle.value}>
@@ -19,7 +19,7 @@ export default function DownloadModal(
           ✕
         </button>
 
-        <h3 className="font-bold text-xl">Your download is ready! 🎉</h3>
+        <h3 className="font-bold text-xl">Collage copied to clipboard!</h3>
         <p className="py-4">Get more out of boxdgrid on Telegram:</p>
 
         <a
