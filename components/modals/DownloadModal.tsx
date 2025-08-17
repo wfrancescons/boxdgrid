@@ -29,15 +29,14 @@ export default function DownloadModal(
           rel="noopener"
         >
           <TelegramIcon className="fill-current w-4 h-4" />
-          t.me/letterboxdgram
+          <span>t.me/letterboxdgram</span>
         </a>
 
         <div className="divider" />
 
         <p className="pb-4">
           <span className="font-bold">This project is free and ad-free!</span>
-          {" "}
-          If you can, support boxdgrid to help keep it online:
+          <span>If you can, support boxdgrid to help keep it online:</span>
         </p>
 
         <a
@@ -51,7 +50,7 @@ export default function DownloadModal(
             alt="Ko-fi"
             className="inline-block h-4 w-5"
           />
-          Support on Ko-fi
+          <span>Support on Ko-fi</span>
         </a>
       </div>
 

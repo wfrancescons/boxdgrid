@@ -148,7 +148,7 @@ export default function GridPicker({ selection }: GridPickerProps) {
   };
 
   return (
-    <div className="flex flex-col w-full mx-auto space-y-1" translate={false}>
+    <div className="flex flex-col w-full mx-auto space-y-1">
       <div className="flex items-center justify-between">
         <p className="text-sm font-medium flex gap-0.5 items-center">
           Grid:
@@ -158,7 +158,7 @@ export default function GridPicker({ selection }: GridPickerProps) {
           >
             {hoverCol.value}
           </span>
-          x
+          <span>x</span>
           <span
             key={`row-${hoverRow.value}`}
             className="inline-block animate-fade-in-up"
@@ -245,8 +245,7 @@ export default function GridPicker({ selection }: GridPickerProps) {
           name="gridPresets"
           aria-label="Last Four"
           checked={selectedPreset.value === "lastFour"}
-          onChange={() =>
-            applyPreset("lastFour")}
+          onChange={() => applyPreset("lastFour")}
         />
         <input
           className="btn btn-sm lg:btn-xs"
@@ -254,8 +253,7 @@ export default function GridPicker({ selection }: GridPickerProps) {
           name="gridPresets"
           aria-label="Feed"
           checked={selectedPreset.value === "feed"}
-          onChange={() =>
-            applyPreset("feed")}
+          onChange={() => applyPreset("feed")}
         />
         <input
           className="btn btn-sm lg:btn-xs"
@@ -263,8 +261,7 @@ export default function GridPicker({ selection }: GridPickerProps) {
           name="gridPresets"
           aria-label="Story"
           checked={selectedPreset.value === "story"}
-          onChange={() =>
-            applyPreset("story")}
+          onChange={() => applyPreset("story")}
         />
       </div>
     </div>

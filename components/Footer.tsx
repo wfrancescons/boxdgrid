@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="w-full max-w-3xl mx-auto p-4 flex flex-col md:flex-row items-center justify-between gap-4">
         <aside className="flex flex-col items-center md:items-start gap-1 text-base-content">
           <span>
-            © {new Date().getFullYear()} -{" "}
+            <span>© {new Date().getFullYear()} -</span>
             <a
               className="link link-hover font-semibold p-0 m-0"
               href="https://bento.me/wfrancescons"
@@ -27,13 +27,14 @@ export default function Footer() {
             target="_blank"
             rel="noopener"
             className="btn btn-soft btn-sm"
+            aria-label="Support me on Ko-fi"
           >
             <img
               src="https://storage.ko-fi.com/cdn/cup-border.png"
               alt="Ko-fi"
               className="inline-block h-3 w-4"
             />
-            Support on Ko-fi
+            <span>Support on Ko-fi</span>
           </a>
           <div className="divider divider-horizontal m-0" />
           <div className="grid grid-flow-col gap-4">
@@ -41,6 +42,7 @@ export default function Footer() {
               href="https://t.me/letterboxdgrambot"
               target="_blank"
               rel="noopener"
+              aria-label="Open letterboxdgram on Telegram"
             >
               <TelegramIcon className="fill-current w-6 h-6" />
             </a>
@@ -48,6 +50,7 @@ export default function Footer() {
               href="https://github.com/wfrancescons"
               target="_blank"
               rel="noopener"
+              aria-label="Visit my GitHub profile"
             >
               <GithubIcon className="fill-current w-6 h-6" />
             </a>

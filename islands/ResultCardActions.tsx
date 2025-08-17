@@ -50,7 +50,7 @@ export default function ResultCardActions(
         data-umami-event="Download button"
       >
         <DownloadIcon className="fill-current w-3 h-3" />
-        Download
+        <span>Download</span>
       </button>
       <button
         type="button"
