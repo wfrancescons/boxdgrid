@@ -21,7 +21,7 @@ export default function UsernameInput(
           type="text"
           class="grow"
           name="letterboxd-username"
-          placeholder={"Letterboxd username"}
+          placeholder="Letterboxd username"
           onInput={(
             e,
           ) => (value.value = (e.target as HTMLInputElement).value)}
