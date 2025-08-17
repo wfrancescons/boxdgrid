@@ -7,7 +7,9 @@ import * as $_app from "./routes/_app.tsx";
 import * as $api_letterboxd_username_ from "./routes/api/letterboxd/[username].ts";
 import * as $index from "./routes/index.tsx";
 import * as $App from "./islands/App.tsx";
+import * as $CollageForm from "./islands/CollageForm.tsx";
 import * as $GridPicker from "./islands/GridPicker.tsx";
+import * as $ResultCardActions from "./islands/ResultCardActions.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -19,7 +21,9 @@ const manifest = {
   },
   islands: {
     "./islands/App.tsx": $App,
+    "./islands/CollageForm.tsx": $CollageForm,
     "./islands/GridPicker.tsx": $GridPicker,
+    "./islands/ResultCardActions.tsx": $ResultCardActions,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

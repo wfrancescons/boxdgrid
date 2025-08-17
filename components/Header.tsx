@@ -12,7 +12,9 @@ export default function Header() {
       </nav>
 
       <div className="text-sm px-20 flex justify-center items-center text-center">
-        Create grid-style collages of your latest Letterboxd watches
+        <span>
+          Create grid-style collages of your latest Letterboxd watches
+        </span>
       </div>
     </header>
   );

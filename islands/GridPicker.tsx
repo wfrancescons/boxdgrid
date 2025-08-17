@@ -48,10 +48,10 @@ const hoverAnchorGrid: ColorGrid = Array.from(
 );
 
 interface GridPickerProps {
-  grid: Signal<GridSize>;
+  selection: Signal<GridSize>;
 }
 
-export default function GridPicker({ grid }: GridPickerProps) {
+export default function GridPicker({ selection }: GridPickerProps) {
   const hoverRow = useSignal<number>(0);
   const hoverCol = useSignal<number>(0);
   const selected = useSignal<GridSize>({ rows: 0, cols: 0 });
@@ -84,7 +84,7 @@ export default function GridPicker({ grid }: GridPickerProps) {
     selected.value = { rows: row, cols: col };
     hoverRow.value = row;
     hoverCol.value = col;
-    grid.value = { rows: row, cols: col };
+    selection.value = { rows: row, cols: col };
 
     if (navigator.vibrate) navigator.vibrate(10);
 
