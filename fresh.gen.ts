@@ -4,6 +4,7 @@
 
 import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
+import * as $_middleware from "./routes/_middleware.ts";
 import * as $api_letterboxd_username_ from "./routes/api/letterboxd/[username].ts";
 import * as $index from "./routes/index.tsx";
 import * as $App from "./islands/App.tsx";
@@ -21,6 +22,7 @@ const manifest = {
   routes: {
     "./routes/_404.tsx": $_404,
     "./routes/_app.tsx": $_app,
+    "./routes/_middleware.ts": $_middleware,
     "./routes/api/letterboxd/[username].ts": $api_letterboxd_username_,
     "./routes/index.tsx": $index,
   },
