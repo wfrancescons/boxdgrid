@@ -24,7 +24,7 @@ export default function UsernameInput(
           placeholder="Letterboxd username"
           onInput={(
             e,
-          ) => (value.value = (e.target as HTMLInputElement).value)}
+          ) => (value.value = (e.target as HTMLInputElement).value.trim())}
         />
       </label>
     </div>
