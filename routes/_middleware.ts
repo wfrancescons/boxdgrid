@@ -7,22 +7,27 @@ export async function handler(req: Request, ctx: FreshContext) {
   const isAllowed = origin === ALLOWED_ORIGIN;
 
   if (req.method === "OPTIONS") {
-    const resp = new Response(null, { status: 204 });
-    if (isAllowed) {
-      const headers = resp.headers;
-      headers.set("Access-Control-Allow-Origin", origin);
-      headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
-      headers.set("Access-Control-Allow-Headers", "Content-Type");
+    if (!isAllowed) {
+      return new Response("CORS not allowed", { status: 403 });
     }
-    return resp;
+
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "Access-Control-Allow-Origin": origin,
+        "Access-Control-Allow-Methods": "GET, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    });
+  }
+
+  if (!isAllowed) {
+    return new Response("CORS not allowed", { status: 403 });
   }
 
   const resp = await ctx.next();
-  if (isAllowed) {
-    const headers = resp.headers;
-    headers.set("Access-Control-Allow-Origin", origin);
-    headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
-    headers.set("Access-Control-Allow-Headers", "Content-Type");
-  }
+  resp.headers.set("Access-Control-Allow-Origin", origin);
+  resp.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
+  resp.headers.set("Access-Control-Allow-Headers", "Content-Type");
   return resp;
 }
