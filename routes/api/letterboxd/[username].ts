@@ -1,5 +1,6 @@
 import { FreshContext } from "$fresh/server.ts";
-import { getLastFilmsSeen } from "../../../services/letterboxd.ts";
+import { FilmItem } from "../../../rendering/template.ts";
+import { DiaryEntry, getLastFilmsSeen } from "../../../services/letterboxd.ts";
 
 async function fetchImageAsDataURI(url: string): Promise<string> {
   try {
@@ -23,29 +24,43 @@ async function fetchImageAsDataURI(url: string): Promise<string> {
 
 export async function handler(
   req: Request,
-  ctx: FreshContext,
+  ctx: FreshContext<{ username: string }>,
 ): Promise<Response> {
   const { username } = ctx.params;
   const url = new URL(req.url);
-  const limit = parseInt(url.searchParams.get("limit") ?? "3", 10);
+  const limit = Number(url.searchParams.get("limit") ?? "3");
 
   try {
-    const films = await getLastFilmsSeen(username, limit);
+    const films: DiaryEntry[] = await getLastFilmsSeen(username, limit);
 
     if (films.length === 0) {
-      return new Response(null, { status: 204 }); // No Content
+      return new Response(null, { status: 204 });
     }
+
+    const result: FilmItem[] = [];
 
     for (const film of films) {
-      if (film.film.image) {
-        film.film.image = await fetchImageAsDataURI(film.film.image);
+      let image = film.film.image;
+      if (image) {
+        image = await fetchImageAsDataURI(image);
       }
+
+      result.push({
+        film: {
+          title: film.film.title,
+          year: film.film.year,
+          image: image ?? "",
+        },
+        rating: film.rating,
+        isRewatch: film.isRewatch,
+        review: film.review,
+      });
     }
 
-    return new Response(JSON.stringify(films), {
+    return new Response(JSON.stringify(result), {
       headers: { "Content-Type": "application/json" },
     });
-  } catch (err) {
+  } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
 
     if (message === "NOT_A_VALID_LETTERBOXD_USER") {

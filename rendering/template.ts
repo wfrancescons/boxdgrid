@@ -1,3 +1,4 @@
+import { Film, Rating } from "../services/letterboxd.ts";
 import { LOGO, REVIEW, REWATCH } from "./images.ts";
 
 import type {
@@ -22,13 +23,9 @@ interface Config {
   RATING_FONT_SIZE: number;
 }
 
-interface FilmItem {
-  film: {
-    title: string;
-    year?: number;
-    image: string;
-  };
-  rating?: { text: string };
+export interface FilmItem {
+  film: Film;
+  rating?: Rating;
   isRewatch?: boolean;
   review?: string;
 }
