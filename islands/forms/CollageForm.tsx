@@ -1,11 +1,11 @@
 import { Signal, useComputed, useSignal } from "@preact/signals";
-import ApiErrorLabel from "../components/forms/ApiErrorLabel.tsx";
-import GenerateButton from "../components/forms/GenerateButton.tsx";
-import TitlesAndRatingToggle from "../components/forms/TitlesAndRatingToggle.tsx";
-import UsernameInput from "../components/forms/UsernameInput.tsx";
-import renderCanvas from "../rendering/render.ts";
-import gridlbTemplate from "../rendering/template.ts";
-import GridPicker from "./GridPicker.tsx";
+import ApiErrorLabel from "../../components/ApiErrorLabel.tsx";
+import renderCanvas from "../../rendering/render.ts";
+import gridlbTemplate from "../../rendering/template.ts";
+import GridPicker from "../GridPicker.tsx";
+import GenerateButton from "./GenerateButton.tsx";
+import TitlesAndRatingToggle from "./TitlesAndRatingToggle.tsx";
+import UsernameInput from "./UsernameInput.tsx";
 
 interface CollageFormProps {
   isLoading: Signal<boolean>;

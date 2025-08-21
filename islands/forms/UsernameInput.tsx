@@ -1,5 +1,5 @@
 import { Signal } from "@preact/signals";
-import UserIcon from "../icons/UserIcon.tsx";
+import UserIcon from "../../components/icons//UserIcon.tsx";
 
 interface UsernameInputProps {
   apiError: string;

@@ -7,9 +7,11 @@ import ResultFigure from "../components/figures/ResultFigure.tsx";
 import WelcomeFigure from "../components/figures/WelcomeFigure.tsx";
 import Footer from "../components/Footer.tsx";
 import Header from "../components/Header.tsx";
-import CopiedModal from "../components/modals/CopiedModal.tsx";
-import DownloadModal from "../components/modals/DownloadModal.tsx";
-import CollageForm from "./CollageForm.tsx";
+
+// Islands
+import CollageForm from "./forms/CollageForm.tsx";
+import CopiedModal from "./modals/CopiedModal.tsx";
+import DownloadModal from "./modals/DownloadModal.tsx";
 import ResultCardActions from "./ResultCardActions.tsx";
 
 export default function App() {

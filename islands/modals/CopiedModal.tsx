@@ -1,5 +1,5 @@
 import { Signal } from "@preact/signals";
-import TelegramIcon from "../icons/TelegramIcon.tsx";
+import TelegramIcon from "../../components/icons//TelegramIcon.tsx";
 
 interface CopiedModalProps {
   toggle: Signal<boolean>;
