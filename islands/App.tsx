@@ -1,5 +1,4 @@
-import { useSignal } from "@preact/signals";
-import { useRef } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 
 // Components
 import LoadingFigure from "../components/figures/LoadingFigure.tsx";
@@ -10,35 +9,23 @@ import Header from "../components/Header.tsx";
 
 // Islands
 import CollageForm from "./forms/CollageForm.tsx";
-import CopiedModal from "./modals/CopiedModal.tsx";
-import DownloadModal from "./modals/DownloadModal.tsx";
 import ResultCardActions from "./ResultCardActions.tsx";
 
 export default function App() {
-  const isLoading = useSignal<boolean>(false);
-  const hasImage = useSignal<boolean>(false);
-  const collage = useSignal<string>("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [collage, setCollage] = useState("");
 
-  const downloadModalToggle = useSignal<boolean>(false);
-  const copiedModalToggle = useSignal<boolean>(false);
+  const resultRef = useRef<HTMLDivElement>(null);
+  const resultFigureRef = useRef<HTMLDivElement>(null);
 
-  const resultRef = useRef<HTMLImageElement>(null);
+  useEffect(() => {
+    if (!collage) return;
 
-  function scrollToImage() {
-    requestAnimationFrame(() => {
-      resultRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
+    resultRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
     });
-  }
-
-  const formSignals = {
-    isLoading,
-    collage,
-    hasImage,
-    scrollToImage,
-  };
+  }, [collage]);
 
   return (
     <>
@@ -49,13 +36,17 @@ export default function App() {
           <div className="flex flex-col md:flex-row items-center justify-center gap-6 max-w-6xl w-full">
             {/* Form Card */}
             <div className="card bg-base-300 shadow-sm">
-              <CollageForm {...formSignals} />
+              <CollageForm
+                isLoading={isLoading}
+                setLoading={setIsLoading}
+                setCollage={setCollage}
+              />
             </div>
 
             {/* Image Card */}
             <div
               className={`md:flex w-full max-w-lg ${
-                collage.value ? "flex" : "hidden"
+                collage ? "flex" : "hidden"
               }`}
             >
               <div className="card w-full bg-base-300 shadow-sm">
@@ -63,24 +54,21 @@ export default function App() {
                   className="card-body items-center justify-center text-center overflow-hidden"
                   ref={resultRef}
                 >
-                  {!hasImage.value && !isLoading.value && <WelcomeFigure />}
+                  {!collage && !isLoading && <WelcomeFigure />}
 
-                  {isLoading.value && <LoadingFigure />}
+                  {isLoading && <LoadingFigure />}
 
-                  {hasImage.value && !isLoading.value && collage.value && (
+                  {collage && !isLoading && (
                     <>
                       <h2 className="font-medium text-base">
                         Your collage:
                       </h2>
-                      <ResultFigure src={collage} />
 
-                      <ResultCardActions
-                        imageSrc={collage}
-                        modals={{
-                          download: downloadModalToggle,
-                          copied: copiedModalToggle,
-                        }}
-                      />
+                      <div ref={resultFigureRef}>
+                        <ResultFigure src={collage} />
+                      </div>
+
+                      <ResultCardActions imageSrc={collage} />
                     </>
                   )}
                 </div>
@@ -89,8 +77,7 @@ export default function App() {
           </div>
         </main>
       </div>
-      <DownloadModal toggle={downloadModalToggle} />
-      <CopiedModal toggle={copiedModalToggle} />
+
       <Footer />
     </>
   );

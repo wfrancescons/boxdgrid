@@ -1,5 +1,4 @@
-import { Signal, useSignal } from "@preact/signals";
-import { useRef } from "preact/hooks";
+import { useRef, useState } from "preact/hooks";
 
 type PresetKey = "pickPreset" | "lastFour" | "feed" | "story" | "custom";
 
@@ -9,7 +8,6 @@ interface GridSize {
 }
 
 type ColorClass = string;
-
 type ColorGrid = ColorClass[][];
 
 const rows = 7;
@@ -27,6 +25,7 @@ const selectionColors: ColorClass[] = [
   "bg-orange-500",
   "bg-green-500",
 ];
+
 const hoverColors: ColorClass[] = [
   "bg-cyan-200",
   "bg-orange-200",
@@ -48,169 +47,136 @@ const hoverAnchorGrid: ColorGrid = Array.from(
 );
 
 interface GridPickerProps {
-  selection: Signal<GridSize>;
+  setGrid: (grid: GridSize) => void;
 }
 
-export default function GridPicker({ selection }: GridPickerProps) {
-  const hoverRow = useSignal<number>(0);
-  const hoverCol = useSignal<number>(0);
-  const selected = useSignal<GridSize>({ rows: 0, cols: 0 });
-  const selectedPreset = useSignal<PresetKey>("pickPreset");
+export default function GridPicker({ setGrid }: GridPickerProps) {
+  const [hoverRow, setHoverRow] = useState(0);
+  const [hoverCol, setHoverCol] = useState(0);
+  const [selected, setSelected] = useState<GridSize>({ rows: 0, cols: 0 });
+  const [selectedPreset, setSelectedPreset] = useState<PresetKey>("pickPreset");
 
-  const isDragging = useRef<boolean>(false);
+  const isDragging = useRef(false);
   const gridRef = useRef<HTMLDivElement>(null);
 
   function getPresetKey(r: number, c: number): PresetKey {
     for (
-      const [key, val] of Object.entries(presets) as [PresetKey, GridSize][]
+      const [key, val] of Object.entries(presets) as [
+        PresetKey,
+        GridSize,
+      ][]
     ) {
       if (val.rows === r && val.cols === c) return key;
     }
     return "custom";
   }
 
-  function applyPreset(preset: PresetKey): void {
-    selectedPreset.value = preset;
+  function handleSelection(row: number, col: number) {
+    const grid = { rows: row, cols: col };
+
+    setSelected(grid);
+    setHoverRow(row);
+    setHoverCol(col);
+    setGrid(grid);
+
+    if (navigator.vibrate) navigator.vibrate(10);
+
+    const isPreset = Object.values(presets).some(
+      (p) => p.rows === row && p.cols === col,
+    );
+
+    setSelectedPreset(isPreset ? getPresetKey(row, col) : "custom");
+  }
+
+  function applyPreset(preset: PresetKey) {
+    setSelectedPreset(preset);
+
     const map: Partial<Record<PresetKey, GridSize>> = {
       lastFour: { rows: 1, cols: 4 },
       feed: { rows: 3, cols: 4 },
       story: { rows: 4, cols: 3 },
     };
-    const { rows: r, cols: c } = map[preset] || { rows: 0, cols: 0 };
-    handleSelection(r, c);
+
+    const { rows = 0, cols = 0 } = map[preset] || {};
+    handleSelection(rows, cols);
   }
 
-  function handleSelection(row: number, col: number): void {
-    selected.value = { rows: row, cols: col };
-    hoverRow.value = row;
-    hoverCol.value = col;
-    selection.value = { rows: row, cols: col };
-
-    if (navigator.vibrate) navigator.vibrate(10);
-
-    const isPreset = Object.entries(presets).some(
-      ([, val]) => val.rows === row && val.cols === col,
-    );
-    selectedPreset.value = isPreset ? getPresetKey(row, col) : "custom";
-  }
-
-  function handleCellEnter(row: number, col: number): void {
+  function handleCellEnter(row: number, col: number) {
     if (isDragging.current) {
       handleSelection(row, col);
     } else {
-      hoverRow.value = row;
-      hoverCol.value = col;
+      setHoverRow(row);
+      setHoverCol(col);
     }
   }
 
-  function getCellFromPosition(
-    clientX: number,
-    clientY: number,
-  ): { row: number; col: number } | null {
+  function getCellFromPosition(clientX: number, clientY: number) {
     if (!gridRef.current) return null;
 
-    const gridRect = gridRef.current.getBoundingClientRect();
-    const relativeX = clientX - gridRect.left;
-    const relativeY = clientY - gridRect.top;
-
-    const cellWidth = gridRect.width / cols;
-    const cellHeight = gridRect.height / rows;
-
-    const col = Math.ceil(relativeX / cellWidth);
-    const row = Math.ceil(relativeY / cellHeight);
+    const rect = gridRef.current.getBoundingClientRect();
+    const col = Math.ceil(((clientX - rect.left) / rect.width) * cols);
+    const row = Math.ceil(((clientY - rect.top) / rect.height) * rows);
 
     if (row >= 1 && row <= rows && col >= 1 && col <= cols) {
       return { row, col };
     }
-
     return null;
   }
 
-  function handleTouchMove(e: TouchEvent): void {
+  function handleTouchMove(e: TouchEvent) {
     if (!isDragging.current) return;
-
     e.preventDefault();
 
     const touch = e.touches[0];
     if (!touch) return;
 
     const cell = getCellFromPosition(touch.clientX, touch.clientY);
-    if (cell) {
-      handleSelection(cell.row, cell.col);
-    }
+    if (cell) handleSelection(cell.row, cell.col);
   }
 
-  const currentHoverAnchorColor = (): ColorClass | null => {
-    if (hoverRow.value > 0 && hoverCol.value > 0) {
-      return hoverAnchorGrid[hoverRow.value - 1]?.[hoverCol.value - 1] || null;
-    }
-    return null;
-  };
+  const hoverAnchorColor = hoverRow > 0 && hoverCol > 0
+    ? hoverAnchorGrid[hoverRow - 1]?.[hoverCol - 1]
+    : null;
 
   return (
-    <div className="flex flex-col w-full mx-auto space-y-1">
-      <div className="flex items-center justify-between">
-        <p className="text-sm font-medium flex gap-0.5 items-center">
-          Grid:
-          <span
-            key={`col-${hoverCol.value}`}
-            className="inline-block animate-fade-in-up"
-          >
-            {hoverCol.value}
-          </span>
-          <span>x</span>
-          <span
-            key={`row-${hoverRow.value}`}
-            className="inline-block animate-fade-in-up"
-          >
-            {hoverRow.value}
-          </span>
-        </p>
-      </div>
+    <div className="flex flex-col w-full space-y-1">
+      <p className="text-sm font-medium">
+        Grid: {hoverCol} x {hoverRow}
+      </p>
 
       <div
         ref={gridRef}
-        className="grid grid-cols-7 gap-1 w-full py-1 touch-none select-none"
-        translate={false}
-        onPointerUp={() => {
-          isDragging.current = false;
-        }}
-        onPointerLeave={() => {
-          isDragging.current = false;
-        }}
+        className="grid grid-cols-7 gap-1 touch-none select-none"
+        onPointerUp={() => (isDragging.current = false)}
+        onPointerLeave={() => (isDragging.current = false)}
         onMouseLeave={() => {
           if (!isDragging.current) {
-            hoverRow.value = selected.value.rows;
-            hoverCol.value = selected.value.cols;
+            setHoverRow(selected.rows);
+            setHoverCol(selected.cols);
           }
         }}
         onTouchMove={handleTouchMove}
-        onTouchEnd={() => {
-          isDragging.current = false;
-        }}
-        onTouchCancel={() => {
-          isDragging.current = false;
-        }}
+        onTouchEnd={() => (isDragging.current = false)}
       >
         {Array.from({ length: rows }, (_, i) =>
           Array.from({ length: cols }, (_, j) => {
             const row = i + 1;
             const col = j + 1;
 
-            const isHovered = row <= hoverRow.value && col <= hoverCol.value;
-            const isSelected = row <= selected.value.rows &&
-              col <= selected.value.cols;
+            const isSelected = row <= selected.rows && col <= selected.cols;
+            const isHovered = row <= hoverRow && col <= hoverCol;
 
-            let bgColor: ColorClass = "bg-neutral-300/30";
+            let bg = "bg-neutral-300/30";
             if (isSelected) {
-              bgColor = selectionGrid[i]?.[j] || bgColor;
-            } else if (isHovered && currentHoverAnchorColor()) {
-              bgColor = currentHoverAnchorColor()!;
+              bg = selectionGrid[i][j];
+            } else if (isHovered && hoverAnchorColor) {
+              bg = hoverAnchorColor;
             }
 
             return (
               <div
                 key={`${row}-${col}`}
+                className={`aspect-4/5 rounded-xs cursor-pointer transition ${bg}`}
                 onPointerDown={(e) => {
                   e.preventDefault();
                   isDragging.current = true;
@@ -223,46 +189,9 @@ export default function GridPicker({ selection }: GridPickerProps) {
                   isDragging.current = true;
                   handleSelection(row, col);
                 }}
-                className={`w-full aspect-[4/5] rounded-xs cursor-pointer transition duration-200 ease-in-out transform hover:scale-110 hover:shadow-md/30 active:scale-105 ${bgColor}`}
               />
             );
           }))}
-      </div>
-
-      <div className="filter">
-        <input
-          className="btn filter-reset btn-sm lg:btn-xs"
-          type="radio"
-          name="gridPresets"
-          aria-label="Reset"
-          checked={selectedPreset.value === "pickPreset"}
-          onChange={() =>
-            applyPreset("pickPreset")}
-        />
-        <input
-          className="btn btn-sm lg:btn-xs"
-          type="radio"
-          name="gridPresets"
-          aria-label="Last Four"
-          checked={selectedPreset.value === "lastFour"}
-          onChange={() => applyPreset("lastFour")}
-        />
-        <input
-          className="btn btn-sm lg:btn-xs"
-          type="radio"
-          name="gridPresets"
-          aria-label="Feed"
-          checked={selectedPreset.value === "feed"}
-          onChange={() => applyPreset("feed")}
-        />
-        <input
-          className="btn btn-sm lg:btn-xs"
-          type="radio"
-          name="gridPresets"
-          aria-label="Story"
-          checked={selectedPreset.value === "story"}
-          onChange={() => applyPreset("story")}
-        />
       </div>
     </div>
   );

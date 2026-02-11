@@ -1,17 +1,27 @@
-import { Signal } from "@preact/signals";
-
 interface ResultFigureProps {
-  src: Signal<string>;
+  src: string;
 }
 
 export default function ResultFigure({ src }: ResultFigureProps) {
   return (
-    <figure className="w-full my-1">
-      <img
-        src={src.value}
-        alt="Letterboxd collage"
-        className="rounded-md w-auto h-auto max-h-[60vh] object-contain"
-      />
-    </figure>
+    <div className="hover-3d p-1.5">
+      {/* content */}
+      <figure className="w-full my-1">
+        <img
+          src={src}
+          alt="Letterboxd collage"
+          className="rounded-md w-auto h-auto max-h-[60vh] object-contain"
+        />
+      </figure>
+      {/* 8 empty divs needed for the 3D effect */}
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
   );
 }

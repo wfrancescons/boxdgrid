@@ -1,80 +1,65 @@
-import { Signal, useSignal } from "@preact/signals";
-
-import CopiedIcon from "../components/icons/CopiedIcon.tsx";
-import CopyIcon from "../components/icons/CopyIcon.tsx";
-import DownloadIcon from "../components/icons/DownloadIcon.tsx";
+import { Check, Copy, Download } from "lucide-preact";
+import { useState } from "preact/hooks";
 
 interface ResultCardActionsProps {
-  imageSrc: Signal<string>;
-  modals: {
-    download: Signal<boolean>;
-    copied: Signal<boolean>;
-  };
+  imageSrc: string;
 }
 
-export default function ResultCardActions(
-  { imageSrc, modals }: ResultCardActionsProps,
-) {
-  const isCopied = useSignal<boolean>(false);
+export default function ResultCardActions({
+  imageSrc,
+}: ResultCardActionsProps) {
+  const [copied, setCopied] = useState(false);
+
+  const sleep = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+
+  async function copyImageToClipboard() {
+    if (copied) return;
+
+    setCopied(true);
+
+    const blob = await (await fetch(imageSrc)).blob();
+    await navigator.clipboard.write([
+      new ClipboardItem({ [blob.type]: blob }),
+    ]);
+
+    await sleep(1500);
+    // onCopy();
+
+    await sleep(300);
+    setCopied(false);
+  }
 
   function downloadCanvasImage() {
     const link = document.createElement("a");
     link.download = "letterboxd-collage.png";
-    link.href = imageSrc.value!;
+    link.href = imageSrc;
     link.click();
-    setTimeout(() => {
-      modals.download.value = true;
-    }, 700);
-  }
 
-  async function copyImageToClipboard() {
-    isCopied.value = true;
-
-    const res = await fetch(imageSrc.value);
-    const blob = await res.blob();
-
-    await navigator.clipboard.write([
-      new ClipboardItem({
-        [blob.type]: blob,
-      }),
-    ]);
-
-    setTimeout(() => {
-      isCopied.value = false;
-      modals.copied.value = true;
-    }, 1000);
+    // onDownload();
   }
 
   return (
-    <div className="card-actions flex flex-row gap-2">
+    <div className="card-actions flex gap-2">
       <button
         type="button"
-        className="btn btn-sm btn-outline"
-        onClick={downloadCanvasImage}
-        data-umami-event="Download button"
-      >
-        <DownloadIcon className="fill-current w-3 h-3" />
-        <span>Download</span>
-      </button>
-      <button
-        type="button"
-        className="btn btn-sm btn-outline"
+        className="btn btn-sm btn-outline gap-2 transition-all duration-300"
         onClick={copyImageToClipboard}
-        data-umami-event="Copy button"
+        disabled={copied}
       >
-        {!isCopied.value
-          ? (
-            <>
-              <CopyIcon className="fill-current w-3 h-3" />
-              <span>Copy to Clipboard</span>
-            </>
-          )
-          : (
-            <>
-              <CopiedIcon className="fill-current w-3 h-3" />
-              <span>Copied!</span>
-            </>
-          )}
+        {copied
+          ? <Check strokeWidth={2.5} className="w-4 h-4" />
+          : <Copy strokeWidth={2.5} className="w-4 h-4" />}
+        <span>{copied ? "Copied!" : "Copy to Clipboard"}</span>
+      </button>
+
+      <button
+        type="button"
+        className="btn btn-sm btn-outline gap-2"
+        onClick={downloadCanvasImage}
+      >
+        <Download strokeWidth={2.5} className="w-4 h-4" />
+        <span>Download</span>
       </button>
     </div>
   );

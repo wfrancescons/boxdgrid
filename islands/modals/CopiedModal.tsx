@@ -1,20 +1,20 @@
-import { Signal } from "@preact/signals";
 import TelegramIcon from "../../components/icons//TelegramIcon.tsx";
 
 interface CopiedModalProps {
-  toggle: Signal<boolean>;
+  toggle: boolean;
+  setToggle: (value: boolean) => void;
 }
 
 export default function CopiedModal(
-  { toggle }: CopiedModalProps,
+  { toggle, setToggle }: CopiedModalProps,
 ) {
   return (
-    <dialog className="modal" open={toggle.value}>
+    <dialog className="modal" open={toggle}>
       <div className="modal-box sm:max-w-sm">
         <button
           type="button"
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-          onClick={() => (toggle.value = false)}
+          onClick={() => setToggle(false)}
         >
           ✕
         </button>
@@ -56,7 +56,7 @@ export default function CopiedModal(
       </div>
 
       <form method="dialog" className="modal-backdrop">
-        <button type="button" onClick={() => (toggle.value = false)}>
+        <button type="button" onClick={() => (setToggle(false))}>
           close
         </button>
       </form>

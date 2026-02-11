@@ -1,7 +1,8 @@
-import { type PageProps } from "$fresh/server.ts";
-export default function App({ Component }: PageProps) {
+import { define } from "../utils.ts";
+
+export default define.page(function App({ Component }) {
   return (
-    <html lang="en" translate={false} className="notranslate">
+    <html lang="en">
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -36,7 +37,7 @@ export default function App({ Component }: PageProps) {
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com"
-          crossorigin=""
+          crossorigin="anonymous"
         />
         <link
           href="https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&family=Noto+Sans+JP:wght@100..900&display=swap"
@@ -54,4 +55,4 @@ export default function App({ Component }: PageProps) {
       </body>
     </html>
   );
-}
+});
