@@ -29,7 +29,8 @@
     "@preact/signals": "npm:@preact/signals@^2.7.1",
     "tailwindcss": "npm:tailwindcss@^4.1.18",
     "fresh": "jsr:@fresh/core@^2.2.0",
-    "vite": "npm:vite@^7.3.1"
+    "vite": "npm:vite@^7.3.1",
+    "vite-plugin-lucide-preprocess": "npm:vite-plugin-lucide-preprocess@^1.4.6"
   },
   "compilerOptions": {
     "lib": [
@@ -67,5 +68,10 @@
     ],
     "include": [],
     "entrypoint": "main.ts"
-  }
+  },
+  "allowScripts": [
+    "npm:@swc/core@1.7.26",
+    "npm:esbuild@0.25.7",
+    "npm:esbuild@0.27.2"
+  ]
 }
