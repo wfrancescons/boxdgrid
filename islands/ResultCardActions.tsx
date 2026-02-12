@@ -40,26 +40,26 @@ export default function ResultCardActions({
   }
 
   return (
-    <div className="card-actions flex gap-2">
+    <div className="card-actions flex flex-col md:flex-row gap-2 justify-center items-center">
       <button
         type="button"
-        className="btn btn-sm btn-outline gap-2 transition-all duration-300"
+        className="btn btn-sm btn-soft gap-2 transition-all duration-500"
         onClick={copyImageToClipboard}
         disabled={copied}
       >
         {copied
           ? <Check strokeWidth={2.5} className="w-4 h-4" />
           : <Copy strokeWidth={2.5} className="w-4 h-4" />}
-        <span>{copied ? "Copied!" : "Copy to Clipboard"}</span>
+        {copied ? "Copied!" : "Copy to Clipboard"}
       </button>
 
       <button
         type="button"
-        className="btn btn-sm btn-outline gap-2"
+        className="btn btn-sm btn-soft gap-2"
         onClick={downloadCanvasImage}
       >
         <Download strokeWidth={2.5} className="w-4 h-4" />
-        <span>Download</span>
+        Download
       </button>
     </div>
   );

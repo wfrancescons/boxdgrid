@@ -1,3 +1,7 @@
 export default function LoadingFigure() {
-  return <div className="skeleton w-full h-[65vh] rounded-md bg-base-200" />;
+  return (
+    <div className="size-full p-8 rounded-xl animate-in fade-in duration-500">
+      <div className="skeleton size-full bg-base-200" />
+    </div>
+  );
 }

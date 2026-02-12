@@ -1,6 +1,6 @@
-import { JSX } from "preact";
+import { SVGAttributes } from "preact";
 
-export default function GithubIcon(props: JSX.SVGAttributes<SVGSVGElement>) {
+export default function GithubIcon(props: SVGAttributes<SVGSVGElement>) {
   return (
     <svg
       {...props}

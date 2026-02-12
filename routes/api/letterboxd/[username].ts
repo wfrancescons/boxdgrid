@@ -24,10 +24,8 @@ async function fetchImageAsDataURI(url: string): Promise<string> {
 
 export const handler = define.handlers({
   async GET(ctx) {
-    const req = ctx.req;
     const { username } = ctx.params;
-    const url = new URL(req.url);
-    const limit = Number(url.searchParams.get("limit") ?? "3");
+    const limit = Number(ctx.url.searchParams.get("limit") ?? "3");
 
     try {
       const films: DiaryEntry[] = await getLastFilmsSeen(username, limit);

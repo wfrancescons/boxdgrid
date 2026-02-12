@@ -1,7 +1,5 @@
 import { useRef, useState } from "preact/hooks";
 
-type PresetKey = "pickPreset" | "lastFour" | "feed" | "story" | "custom";
-
 interface GridSize {
   rows: number;
   cols: number;
@@ -12,13 +10,6 @@ type ColorGrid = ColorClass[][];
 
 const rows = 7;
 const cols = 7;
-
-const presets: Record<Exclude<PresetKey, "custom">, GridSize> = {
-  pickPreset: { rows: 0, cols: 0 },
-  lastFour: { rows: 1, cols: 4 },
-  feed: { rows: 3, cols: 4 },
-  story: { rows: 4, cols: 3 },
-};
 
 const selectionColors: ColorClass[] = [
   "bg-cyan-500",
@@ -54,22 +45,9 @@ export default function GridPicker({ setGrid }: GridPickerProps) {
   const [hoverRow, setHoverRow] = useState(0);
   const [hoverCol, setHoverCol] = useState(0);
   const [selected, setSelected] = useState<GridSize>({ rows: 0, cols: 0 });
-  const [selectedPreset, setSelectedPreset] = useState<PresetKey>("pickPreset");
 
   const isDragging = useRef(false);
   const gridRef = useRef<HTMLDivElement>(null);
-
-  function getPresetKey(r: number, c: number): PresetKey {
-    for (
-      const [key, val] of Object.entries(presets) as [
-        PresetKey,
-        GridSize,
-      ][]
-    ) {
-      if (val.rows === r && val.cols === c) return key;
-    }
-    return "custom";
-  }
 
   function handleSelection(row: number, col: number) {
     const grid = { rows: row, cols: col };
@@ -80,25 +58,6 @@ export default function GridPicker({ setGrid }: GridPickerProps) {
     setGrid(grid);
 
     if (navigator.vibrate) navigator.vibrate(10);
-
-    const isPreset = Object.values(presets).some(
-      (p) => p.rows === row && p.cols === col,
-    );
-
-    setSelectedPreset(isPreset ? getPresetKey(row, col) : "custom");
-  }
-
-  function applyPreset(preset: PresetKey) {
-    setSelectedPreset(preset);
-
-    const map: Partial<Record<PresetKey, GridSize>> = {
-      lastFour: { rows: 1, cols: 4 },
-      feed: { rows: 3, cols: 4 },
-      story: { rows: 4, cols: 3 },
-    };
-
-    const { rows = 0, cols = 0 } = map[preset] || {};
-    handleSelection(rows, cols);
   }
 
   function handleCellEnter(row: number, col: number) {
@@ -139,7 +98,7 @@ export default function GridPicker({ setGrid }: GridPickerProps) {
     : null;
 
   return (
-    <div className="flex flex-col w-full space-y-1">
+    <div className="flex flex-col w-full gap-2">
       <p className="text-sm font-medium">
         Grid: {hoverCol} x {hoverRow}
       </p>

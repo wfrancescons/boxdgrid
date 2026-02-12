@@ -4,16 +4,15 @@ interface ResultFigureProps {
 
 export default function ResultFigure({ src }: ResultFigureProps) {
   return (
-    <div className="hover-3d p-1.5">
-      {/* content */}
-      <figure className="w-full my-1">
+    <div className="md:hover-3d size-fit rounded-md animate-in fade-in zoom-in-50 duration-500">
+      <figure className="w-full h-full rounded-md overflow-hidden">
         <img
           src={src}
           alt="Letterboxd collage"
-          className="rounded-md w-auto h-auto max-h-[60vh] object-contain"
+          className="w-full h-full max-h-[60vh] object-contain"
         />
       </figure>
-      {/* 8 empty divs needed for the 3D effect */}
+
       <div></div>
       <div></div>
       <div></div>

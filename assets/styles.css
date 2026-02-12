@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @plugin "daisyui";
+@import "tw-animate-css";
 
 @plugin "daisyui/theme" {
   name: "letterboxd";
@@ -46,17 +47,17 @@
   background:
     radial-gradient(
       circle at 30% 50%,
-      var(--color-info) -200%,
+      oklch(70% 0.213 47.604) -150%,
       transparent 35%
     ),
     radial-gradient(
     circle at 70% 60%,
-    var(--color-success) -200%,
-    transparent 30%
+    oklch(72% 0.219 149.579) -150%,
+    transparent 35%
   ),
     radial-gradient(
     circle at 50% 20%,
-    var(--color-neutral) -200%,
+    oklch(60% 0.126 221.723) -150%,
     transparent 35%
   );
 }

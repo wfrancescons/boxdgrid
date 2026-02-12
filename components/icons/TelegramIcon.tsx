@@ -1,6 +1,6 @@
-import { JSX } from "preact";
+import { SVGAttributes } from "preact";
 
-export default function TelegramIcon(props: JSX.SVGAttributes<SVGSVGElement>) {
+export default function TelegramIcon(props: SVGAttributes<SVGSVGElement>) {
   return (
     <svg
       {...props}

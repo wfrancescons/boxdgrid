@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="w-full max-w-3xl mx-auto p-4 flex flex-col md:flex-row items-center justify-between gap-4">
         <aside className="flex flex-col items-center md:items-start gap-1 text-base-content">
           <span>
-            <span>© {new Date().getFullYear()} -</span>
+            © {new Date().getFullYear()} -{" "}
             <a
               className="link link-hover font-semibold p-0 m-0"
               href="https://bento.me/wfrancescons"
@@ -34,7 +34,7 @@ export default function Footer() {
               alt="Ko-fi"
               className="inline-block h-3 w-4"
             />
-            <span>Support on Ko-fi</span>
+            Support on Ko-fi
           </a>
           <div className="divider divider-horizontal m-0" />
           <div className="grid grid-flow-col gap-4">
