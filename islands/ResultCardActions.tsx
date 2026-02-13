@@ -1,5 +1,7 @@
 import { Check, Copy, Download } from "lucide-preact";
 import { useState } from "preact/hooks";
+import CopiedModal from "./modals/CopiedModal.tsx";
+import DownloadModal from "./modals/DownloadModal.tsx";
 
 interface ResultCardActionsProps {
   imageSrc: string;
@@ -8,10 +10,13 @@ interface ResultCardActionsProps {
 export default function ResultCardActions({
   imageSrc,
 }: ResultCardActionsProps) {
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<boolean>(false);
+  const [downloadOpen, setDownloadOpen] = useState(false);
+  const [copyOpen, setCopyOpen] = useState(false);
 
-  const sleep = (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
+  function sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
   async function copyImageToClipboard() {
     if (copied) return;
@@ -24,19 +29,19 @@ export default function ResultCardActions({
     ]);
 
     await sleep(1500);
-    // onCopy();
+    setCopyOpen(true);
 
     await sleep(300);
     setCopied(false);
   }
 
-  function downloadCanvasImage() {
+  async function downloadCanvasImage() {
     const link = document.createElement("a");
     link.download = "letterboxd-collage.png";
     link.href = imageSrc;
     link.click();
-
-    // onDownload();
+    await sleep(500);
+    setDownloadOpen(true);
   }
 
   return (
@@ -61,6 +66,8 @@ export default function ResultCardActions({
         <Download strokeWidth={2.5} className="w-4 h-4" />
         Download
       </button>
+      <DownloadModal isOpen={downloadOpen} setOpen={setDownloadOpen} />
+      <CopiedModal isOpen={copyOpen} setOpen={setCopyOpen} />
     </div>
   );
 }

@@ -1,20 +1,36 @@
+import { useEffect, useRef } from "preact/hooks";
 import TelegramIcon from "../../components/icons//TelegramIcon.tsx";
 
 interface CopiedModalProps {
-  toggle: boolean;
-  setToggle: (value: boolean) => void;
+  isOpen: boolean;
+  setOpen: (value: boolean) => void;
 }
 
 export default function CopiedModal(
-  { toggle, setToggle }: CopiedModalProps,
+  { isOpen, setOpen }: CopiedModalProps,
 ) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    if (isOpen && !dialog.open) {
+      dialog.showModal();
+    }
+
+    if (!isOpen && dialog.open) {
+      dialog.close();
+    }
+  }, [isOpen]);
+
   return (
-    <dialog className="modal" open={toggle}>
+    <dialog ref={dialogRef} className="modal">
       <div className="modal-box sm:max-w-sm">
         <button
           type="button"
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-          onClick={() => setToggle(false)}
+          onClick={() => setOpen(false)}
         >
           ✕
         </button>
@@ -56,7 +72,7 @@ export default function CopiedModal(
       </div>
 
       <form method="dialog" className="modal-backdrop">
-        <button type="button" onClick={() => (setToggle(false))}>
+        <button type="submit" onClick={() => setOpen(false)}>
           close
         </button>
       </form>
