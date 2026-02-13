@@ -7,3 +7,7 @@ export const app = new App<State>();
 app.use(staticFiles());
 // Enable file-system based routing
 app.fsRoutes();
+
+app.notFound((ctx) => {
+  return Response.redirect(ctx.url.origin, 307);
+});
