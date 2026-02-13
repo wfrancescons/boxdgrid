@@ -1,5 +1,5 @@
 {
-  "nodeModulesDir": "manual",
+  "nodeModulesDir": "auto",
   "tasks": {
     "check": "deno fmt --check . && deno lint . && deno check",
     "dev": "vite",
@@ -13,7 +13,7 @@
     "@/": "./",
     "@fresh/plugin-vite": "jsr:@fresh/plugin-vite@^1.0.8",
     "@tailwindcss/vite": "npm:@tailwindcss/vite@^4.1.18",
-    "cheerio": "npm:cheerio@^1.2.0",
+    "cheerio": "npm:cheerio@^1.1.0",
     "daisyui": "npm:daisyui@^5.5.18",
     "lucide-preact": "npm:lucide-preact@^0.562.0",
     "preact": "npm:preact@^10.27.2",
