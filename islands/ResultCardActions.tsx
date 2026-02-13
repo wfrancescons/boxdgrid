@@ -51,6 +51,7 @@ export default function ResultCardActions({
         className="btn btn-sm btn-soft gap-2 transition-all duration-500"
         onClick={copyImageToClipboard}
         disabled={copied}
+        data-umami-event="Copy button"
       >
         {copied
           ? <Check strokeWidth={2.5} className="w-4 h-4" />
@@ -62,6 +63,7 @@ export default function ResultCardActions({
         type="button"
         className="btn btn-sm btn-soft gap-2"
         onClick={downloadCanvasImage}
+        data-umami-event="Download button"
       >
         <Download strokeWidth={2.5} className="w-4 h-4" />
         Download
