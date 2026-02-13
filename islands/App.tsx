@@ -28,7 +28,7 @@ export default function App() {
   return (
     <div className="flex-1 flex flex-col md:flex-row items-stretch justify-center bg-base-300/50 shadow-sm w-full rounded-3xl drop-shadow-2xl overflow-hidden p-3 gap-3 min-h-0">
       {/* Form */}
-      <div className="flex flex-col w-full max-w-50 shrink-0 p-3 items-center justify-center mx-auto">
+      <div className="flex flex-col w-full md:max-w-50 shrink-0 p-3 items-center justify-center mx-auto">
         <CollageForm
           isLoading={isLoading}
           setLoading={setIsLoading}
