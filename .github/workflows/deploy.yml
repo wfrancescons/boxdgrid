@@ -23,9 +23,6 @@ jobs:
         with:
           deno-version: v2.x
 
-      - name: Cache deps
-        run: deno cache --no-lock main.ts
-
       - name: Build
         run: deno task build
 
