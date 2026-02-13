@@ -1,6 +1,10 @@
+import { FilmItem } from "@/rendering/template.ts";
+import {
+  DiaryEntry,
+  getLastFilmsSeen,
+  TimeFilter,
+} from "@/services/letterboxd.ts";
 import { define } from "@/utils.ts";
-import { FilmItem } from "../../../rendering/template.ts";
-import { DiaryEntry, getLastFilmsSeen } from "../../../services/letterboxd.ts";
 
 async function fetchImageAsDataURI(url: string): Promise<string> {
   try {
@@ -22,13 +26,30 @@ async function fetchImageAsDataURI(url: string): Promise<string> {
   }
 }
 
+function parseTimeFilter(value: string | null): TimeFilter {
+  const allowed: TimeFilter[] = ["all", "7d", "15d", "30d"];
+
+  if (value && allowed.includes(value as TimeFilter)) {
+    return value as TimeFilter;
+  }
+
+  return "all";
+}
+
 export const handler = define.handlers({
   async GET(ctx) {
     const { username } = ctx.params;
+
     const limit = Number(ctx.url.searchParams.get("limit") ?? "3");
+    const timeParam = ctx.url.searchParams.get("time");
+    const time = parseTimeFilter(timeParam);
 
     try {
-      const films: DiaryEntry[] = await getLastFilmsSeen(username, limit);
+      const films: DiaryEntry[] = await getLastFilmsSeen(
+        username,
+        limit,
+        time,
+      );
 
       if (films.length === 0) {
         return new Response(null, { status: 204 });
@@ -38,6 +59,7 @@ export const handler = define.handlers({
 
       for (const film of films) {
         let image = film.film.image;
+
         if (image) {
           image = await fetchImageAsDataURI(image);
         }

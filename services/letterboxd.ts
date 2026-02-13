@@ -28,6 +28,7 @@ interface DiaryEntry {
 }
 
 type ScoreMap = Record<string, string | null>;
+type TimeFilter = "all" | "7d" | "15d" | "30d";
 
 function getRating(element: cheerio.Cheerio<any>): Rating {
   const memberRating = element.find("letterboxd\\:memberRating").text()
@@ -72,9 +73,7 @@ function getReview(element: cheerio.Cheerio<any>): string {
   const reviewParagraphs = $("p");
   let review = "";
 
-  if (reviewParagraphs.length <= 0) {
-    return review;
-  }
+  if (reviewParagraphs.length <= 0) return review;
 
   if (reviewParagraphs.last().text().includes("Watched on ")) {
     return review;
@@ -126,54 +125,68 @@ function processItem(
 }
 
 async function getLetterboxdUserXml(username: string): Promise<string> {
-  try {
-    const response = await fetch(`https://letterboxd.com/${username}/rss/`);
+  const response = await fetch(`https://letterboxd.com/${username}/rss/`);
 
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw "NOT_A_VALID_LETTERBOXD_USER";
-      } else {
-        throw new Error(`Request failed with status: ${response.status}`);
-      }
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw "NOT_A_VALID_LETTERBOXD_USER";
+    } else {
+      throw new Error(`Request failed with status: ${response.status}`);
     }
-
-    const data = await response.text();
-    return data;
-  } catch (error) {
-    throw error;
   }
+
+  return await response.text();
 }
 
 async function getUserDiary(username: string): Promise<DiaryEntry[]> {
-  try {
-    const xml = await getLetterboxdUserXml(username);
-    const $ = cheerio.load(xml, { xmlMode: true });
+  const xml = await getLetterboxdUserXml(username);
+  const $ = cheerio.load(xml, { xmlMode: true });
 
-    const itemElements = $("item").toArray();
+  const itemElements = $("item").toArray();
 
-    const results = itemElements
-      .map((element) => processItem($(element)))
-      .filter((entry): entry is DiaryEntry => entry !== null);
+  const results = itemElements
+    .map((element) => processItem($(element)))
+    .filter((entry): entry is DiaryEntry => entry !== null);
 
-    return results;
-  } catch (error) {
-    throw error;
-  }
+  return results;
+}
+
+function filterByTime(
+  diary: DiaryEntry[],
+  time: TimeFilter,
+): DiaryEntry[] {
+  if (time === "all") return diary;
+
+  const now = Date.now();
+
+  const daysMap: Record<Exclude<TimeFilter, "all">, number> = {
+    "7d": 7,
+    "15d": 15,
+    "30d": 30,
+  };
+
+  const days = daysMap[time];
+  const fromTimestamp = now - (days * 24 * 60 * 60 * 1000);
+
+  return diary.filter((item) =>
+    item.date.watched &&
+    item.date.watched >= fromTimestamp &&
+    item.date.watched <= now
+  );
 }
 
 export async function getLastFilmsSeen(
   username: string,
   limit = 1,
+  time: TimeFilter = "all",
 ): Promise<DiaryEntry[]> {
-  try {
-    const userDiary = await getUserDiary(username);
+  const userDiary = await getUserDiary(username);
 
-    if (!userDiary.length) throw "ZERO_ACTIVITIES";
+  if (!userDiary.length) throw "ZERO_ACTIVITIES";
 
-    return userDiary.slice(0, limit);
-  } catch (error) {
-    throw error;
-  }
+  const filtered = filterByTime(userDiary, time);
+
+  return filtered.slice(0, limit);
 }
 
-export type { DiaryEntry, Film, FilmDate, Rating };
+export type { DiaryEntry, Film, FilmDate, Rating, TimeFilter };

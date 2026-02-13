@@ -46,9 +46,15 @@ export default function CollageForm(
     try {
       const param = showTitlesAndRating ? null : "notexts";
 
-      const res = await fetch(
-        `api/letterboxd/${username}?limit=${rows * cols}`,
+      const url = new URL(
+        `/api/letterboxd/${username}`,
+        globalThis.location.origin,
       );
+
+      url.searchParams.set("limit", String(rows * cols));
+      url.searchParams.set("time", period);
+
+      const res = await fetch(url);
 
       if (!res.ok) {
         setApiError(getErrorMessage(res));
