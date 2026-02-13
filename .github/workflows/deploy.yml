@@ -20,8 +20,6 @@ jobs:
 
       - name: Install Deno
         uses: denoland/setup-deno@v2
-        with:
-          cache: true
 
       - name: Run install step
         run: "deno install"
