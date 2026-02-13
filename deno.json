@@ -69,10 +69,5 @@
     ],
     "include": [],
     "entrypoint": "main.ts"
-  },
-  "allowScripts": [
-    "npm:@swc/core@1.7.26",
-    "npm:esbuild@0.25.7",
-    "npm:esbuild@0.27.2"
-  ]
+  }
 }
