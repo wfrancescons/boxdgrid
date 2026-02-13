@@ -21,7 +21,10 @@ jobs:
       - name: Install Deno
         uses: denoland/setup-deno@v2
         with:
-          deno-version: v2.x
+          cache: true
+
+      - name: Run install step
+        run: "deno install"
 
       - name: Build step
         run: "deno task build"
@@ -32,5 +35,3 @@ jobs:
           project: "boxdgrid"
           entrypoint: "main.ts"
           root: "."
-          
-          
