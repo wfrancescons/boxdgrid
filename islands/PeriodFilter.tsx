@@ -16,13 +16,14 @@ export default function PeriodFilter({ period, setPeriod }: PeriodFilterProps) {
         Time Period:
       </legend>
 
-      <div className="filter *:btn *:md:btn-sm *:checked:btn-info *:checked:text-white">
+      <div className="flex flex-row gap-2 *:btn *:md:btn-xs *:checked:btn-info *:checked:text-white">
         <input
           type="radio"
           className="filter-reset"
           name="period"
           value="all"
           aria-label="All"
+          checked={period === "all"}
           onChange={handleChange}
         />
         <input
