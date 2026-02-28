@@ -98,14 +98,14 @@ export default function GridPicker({ setGrid }: GridPickerProps) {
     : null;
 
   return (
-    <div className="flex flex-col w-full gap-2">
+    <div className="flex flex-col w-full gap-4 md:gap-2">
       <p className="text-sm font-medium">
         Grid: {hoverCol} x {hoverRow}
       </p>
 
       <div
         ref={gridRef}
-        className="grid grid-cols-7 gap-1 touch-none select-none"
+        className="grid grid-cols-7 gap-1.5 md:gap-1 touch-none select-none"
         onPointerUp={() => (isDragging.current = false)}
         onPointerLeave={() => (isDragging.current = false)}
         onMouseLeave={() => {
@@ -135,7 +135,7 @@ export default function GridPicker({ setGrid }: GridPickerProps) {
             return (
               <div
                 key={`${row}-${col}`}
-                className={`aspect-4/5 rounded-xs cursor-pointer transition ${bg}`}
+                className={`aspect-4/5 rounded-sm md:rounded-xs cursor-pointer transition hover:scale-105 ${bg}`}
                 onPointerDown={(e) => {
                   e.preventDefault();
                   isDragging.current = true;
