@@ -2,7 +2,7 @@ export default function Header() {
   return (
     <header className="flex flex-col max-w-md justify-center items-center gap-2 pt-5">
       <img
-        src="/boxdgrid-logo.webp"
+        src="boxdgrid-logo.svg"
         alt="BoxdGrid Logo"
         className="w-full max-w-40"
       />
