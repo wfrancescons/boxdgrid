@@ -26,7 +26,7 @@ export default function App() {
   }, [collage]);
 
   return (
-    <div className="flex-1 flex flex-col md:flex-row items-stretch justify-center bg-base-300/50 shadow-sm w-full rounded-3xl drop-shadow-2xl overflow-hidden p-3 gap-3 min-h-0">
+    <div className="flex flex-col md:flex-row items-stretch justify-center bg-base-300/50 shadow-sm w-full rounded-3xl drop-shadow-2xl overflow-hidden p-3 gap-3 min-h-0">
       {/* Form */}
       <div className="flex flex-col w-full md:max-w-50 shrink-0 p-3 items-center justify-center mx-auto">
         <CollageForm
@@ -39,31 +39,35 @@ export default function App() {
 
       {/* Image Card */}
       <div
-        className={`flex-1 md:flex ${collage ? "flex" : "hidden"} min-h-0`}
+        className={`flex-1 md:flex ${
+          collage ? "flex" : "hidden"
+        } min-h-0 md:relative`}
       >
-        <div className="flex flex-1 min-h-0">
-          <div className="flex flex-1 flex-col w-full bg-base-100/75 rounded-2xl items-center justify-center p-3 min-h-0">
-            {!collage && !isLoading && <WelcomeFigure />}
+        <div
+          className={`md:absolute md:inset-0 flex flex-1 flex-col w-full bg-base-100/75 rounded-2xl items-center justify-center p-3 min-h-0 overflow-hidden`}
+        >
+          {!collage && !isLoading && <WelcomeFigure />}
 
-            {isLoading && <LoadingFigure />}
+          {isLoading && <LoadingFigure />}
 
-            {collage && !isLoading && (
-              <div className="flex flex-1 flex-col items-center justify-between gap-4 w-full min-h-0">
-                <h2 className="font-bold">
-                  {`Your ${selectedGrid.cols}x${selectedGrid.rows} collage:`}
-                </h2>
+          {collage && !isLoading && (
+            <div className="flex flex-1 flex-col items-center justify-between gap-4 w-full min-h-0 overflow-hidden">
+              <h2 className="font-bold shrink-0">
+                {`Your ${selectedGrid.cols}x${selectedGrid.rows} collage:`}
+              </h2>
 
-                <div
-                  ref={resultRef}
-                  className="flex-1 flex items-center justify-center w-full min-h-0"
-                >
-                  <ResultFigure src={collage} />
-                </div>
+              <div
+                ref={resultRef}
+                className="flex-1 flex items-center justify-center w-full min-h-0"
+              >
+                <ResultFigure src={collage} />
+              </div>
 
+              <div className="shrink-0">
                 <ResultCardActions imageSrc={collage} />
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

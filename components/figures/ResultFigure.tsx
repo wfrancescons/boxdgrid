@@ -4,7 +4,7 @@ interface ResultFigureProps {
 
 export default function ResultFigure({ src }: ResultFigureProps) {
   return (
-    <div className="md:hover-3d size-fit rounded-md animate-in fade-in zoom-in-50 duration-500">
+    <div className="md:hover-3d size-fit max-h-full rounded-md animate-in fade-in zoom-in-50 duration-500">
       <figure className="w-full h-full rounded-md overflow-hidden">
         <img
           src={src}
