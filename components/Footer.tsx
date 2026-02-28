@@ -9,7 +9,7 @@ export default function Footer() {
           <span>
             © {new Date().getFullYear()} -{" "}
             <a
-              className="link link-hover font-semibold p-0 m-0"
+              className="link font-semibold p-0 m-0"
               href="https://letterboxd.com/wfrancescons/"
               target="_blank"
               rel="noopener"
