@@ -122,7 +122,7 @@ export default function CollageForm(
 
       <GridPicker setGrid={setGrid} />
 
-      <label className="text-base-content/60 flex items-center gap-2 text-sm md:text-xs">
+      <label className="text-base-content/60 flex items-center gap-2 md:text-xs">
         <input
           type="checkbox"
           className="toggle toggle-sm toggle-primary"
