@@ -1,6 +1,6 @@
 export default function Header() {
   return (
-    <header className="flex flex-col max-w-md justify-center items-center gap-2 pt-5">
+    <header className="flex flex-col max-w-md justify-center items-center gap-2 pt-6">
       <img
         src="boxdgrid-logo.svg"
         alt="BoxdGrid Logo"
