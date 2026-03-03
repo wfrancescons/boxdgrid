@@ -3,7 +3,7 @@ import TelegramIcon from "./icons/TelegramIcon.tsx";
 
 export default function Footer() {
   return (
-    <footer className="footer md:footer-horizontal bg-base-300 text-neutral-content items-center py-2 md:py-4">
+    <footer className="footer md:footer-horizontal bg-base-300/25 text-neutral-content items-center py-2 md:py-4">
       <div className="w-full max-w-3xl mx-auto p-4 flex flex-col md:flex-row items-center justify-between gap-4">
         <aside className="flex flex-col items-center md:items-start gap-1 text-base-content">
           <span>
@@ -26,7 +26,7 @@ export default function Footer() {
             href="https://ko-fi.com/wfrancescons"
             target="_blank"
             rel="noopener"
-            className="btn btn-soft btn-sm"
+            className="btn btn-outline hover:bg-indigo-400 btn-sm"
             aria-label="Support me on Ko-fi"
           >
             <img
