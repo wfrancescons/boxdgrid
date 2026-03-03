@@ -2,13 +2,14 @@ import { define } from "../utils.ts";
 
 export default define.page(function App({ Component }) {
   return (
-    <html lang="en">
+    <html lang="en" translate="no">
       <head>
         <link href="favicon.ico" rel="icon" sizes="48x48" />
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="google" content="notranslate" />
         <title>boxdgrid – Letterboxd Collage Generator</title>
+        <meta name="google" content="notranslate" />
         <meta
           name="description"
           content="Create grid-style collages from the films you've logged on Letterboxd. Choose your grid dimensions, display ratings and titles, and share your personalized movie collage with friends. Perfect for showcasing your recent watches, favorites, or themed lists in a visual and organized way."
