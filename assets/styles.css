@@ -44,7 +44,9 @@
 }
 
 .bg {
-  background:
+  background-color: #0b0908;
+
+  background-image:
     radial-gradient(
       circle at 30% 50%,
       oklch(70% 0.213 47.604) -150%,

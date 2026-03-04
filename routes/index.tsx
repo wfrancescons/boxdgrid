@@ -4,7 +4,7 @@ import App from "@/islands/App.tsx";
 
 export default function Home() {
   return (
-    <div className="bg flex min-h-dvh w-full flex-col items-center">
+    <>
       <Header />
 
       <main className="flex min-h-0 w-full flex-1 items-center justify-center p-6">
@@ -14,6 +14,6 @@ export default function Home() {
       </main>
 
       <Footer />
-    </div>
+    </>
   );
 }

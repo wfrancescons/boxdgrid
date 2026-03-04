@@ -52,7 +52,10 @@ export default define.page(function App({ Component }) {
           data-website-id="ca4babd8-9261-4409-a918-53e5219b7777"
         />
       </head>
-      <body data-theme="letterboxd">
+      <body
+        className="bg flex min-h-dvh flex-col items-center"
+        data-theme="letterboxd"
+      >
         <Component />
       </body>
     </html>
