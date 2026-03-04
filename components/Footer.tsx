@@ -3,13 +3,13 @@ import TelegramIcon from "./icons/TelegramIcon.tsx";
 
 export default function Footer() {
   return (
-    <footer className="footer md:footer-horizontal bg-base-300/25 text-neutral-content items-center py-2 md:py-4">
-      <div className="w-full max-w-3xl mx-auto p-4 flex flex-col md:flex-row items-center justify-between gap-4">
-        <aside className="flex flex-col items-center md:items-start gap-1 text-base-content">
+    <footer className="footer md:footer-horizontal items-center bg-base-300/25 py-2 text-neutral-content md:py-4">
+      <div className="mx-auto flex w-full max-w-3xl flex-col items-center justify-between gap-4 p-4 md:flex-row">
+        <aside className="flex flex-col items-center gap-1 text-base-content md:items-start">
           <span>
             © {new Date().getFullYear()} -{" "}
             <a
-              className="link font-semibold p-0 m-0"
+              className="link m-0 p-0 font-semibold"
               href="https://letterboxd.com/wfrancescons/"
               target="_blank"
               rel="noopener"
@@ -17,16 +17,16 @@ export default function Footer() {
               Wesley Francescon
             </a>
           </span>
-          <span className="text-xs text-base-content/60">
+          <span className="text-base-content/60 text-xs">
             This project is not associated with Letterboxd.
           </span>
         </aside>
-        <nav className="flex gap-4 items-center">
+        <nav className="flex items-center gap-4">
           <a
             href="https://ko-fi.com/wfrancescons"
             target="_blank"
             rel="noopener"
-            className="btn btn-outline hover:bg-indigo-400 btn-sm"
+            className="btn btn-outline btn-sm hover:bg-indigo-400"
             aria-label="Support me on Ko-fi"
           >
             <img
@@ -44,7 +44,7 @@ export default function Footer() {
               rel="noopener"
               aria-label="Open letterboxdgram on Telegram"
             >
-              <TelegramIcon className="fill-current w-6 h-6" />
+              <TelegramIcon className="h-6 w-6 fill-current" />
             </a>
             <a
               href="https://github.com/wfrancescons"
@@ -52,7 +52,7 @@ export default function Footer() {
               rel="noopener"
               aria-label="Visit my GitHub profile"
             >
-              <GithubIcon className="fill-current w-6 h-6" />
+              <GithubIcon className="h-6 w-6 fill-current" />
             </a>
           </div>
         </nav>

@@ -4,12 +4,12 @@ interface ResultFigureProps {
 
 export default function ResultFigure({ src }: ResultFigureProps) {
   return (
-    <div className="md:hover-3d w-fit h-full rounded-md animate-in fade-in zoom-in-50 duration-500">
-      <figure className="rounded-md overflow-hidden">
+    <div className="fade-in md:hover-3d zoom-in-50 h-full w-fit animate-in rounded-md duration-500">
+      <figure className="overflow-hidden rounded-md">
         <img
           src={src}
           alt="Letterboxd collage"
-          className="max-h-full max-w-full h-auto w-auto object-contain"
+          className="h-auto max-h-full w-auto max-w-full object-contain"
         />
       </figure>
 

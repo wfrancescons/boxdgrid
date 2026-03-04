@@ -45,7 +45,7 @@ export default function ResultCardActions({
   }
 
   return (
-    <div className="card-actions flex flex-col md:flex-row gap-2 justify-center items-center">
+    <div className="card-actions flex flex-col items-center justify-center gap-2 md:flex-row">
       <button
         type="button"
         className="btn btn-sm btn-soft gap-2 transition-all duration-500"
@@ -54,8 +54,8 @@ export default function ResultCardActions({
         data-umami-event="Copy button"
       >
         {copied
-          ? <Check strokeWidth={2.5} className="w-4 h-4" />
-          : <Copy strokeWidth={2.5} className="w-4 h-4" />}
+          ? <Check strokeWidth={2.5} className="h-4 w-4" />
+          : <Copy strokeWidth={2.5} className="h-4 w-4" />}
         {copied ? "Copied!" : "Copy to Clipboard"}
       </button>
 
@@ -65,7 +65,7 @@ export default function ResultCardActions({
         onClick={downloadCanvasImage}
         data-umami-event="Download button"
       >
-        <Download strokeWidth={2.5} className="w-4 h-4" />
+        <Download strokeWidth={2.5} className="h-4 w-4" />
         Download
       </button>
       <DownloadModal isOpen={downloadOpen} setOpen={setDownloadOpen} />

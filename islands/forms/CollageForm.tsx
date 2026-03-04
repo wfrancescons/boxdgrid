@@ -82,14 +82,14 @@ export default function CollageForm(
 
   return (
     <form
-      className="flex flex-col gap-3 w-full"
+      className="flex w-full flex-col gap-3"
       onSubmit={(e) => e.preventDefault()}
     >
-      <div className="flex flex-col gap-2 w-full">
-        <span className="text-sm font-medium">
+      <div className="flex w-full flex-col gap-2">
+        <span className="font-medium text-sm">
           Letterboxd Username:
         </span>
-        <div className="flex flex-col w-full gap-1">
+        <div className="flex w-full flex-col gap-1">
           <label
             className={`input input-border ${
               apiError ? "input-error" : ""
@@ -97,7 +97,7 @@ export default function CollageForm(
           >
             <UserRound
               strokeWidth={2.5}
-              className="h-4 w-4 opacity-70 stroke-current"
+              className="h-4 w-4 stroke-current opacity-70"
             />
             <input
               type="text"
@@ -112,7 +112,7 @@ export default function CollageForm(
           </label>
           {apiError && (
             <div className="label flex-none">
-              <span className="text-error font-bold md:text-xs">
+              <span className="font-bold text-error md:text-xs">
                 {apiError}
               </span>
             </div>
@@ -122,10 +122,10 @@ export default function CollageForm(
 
       <GridPicker setGrid={setGrid} />
 
-      <label className="text-base-content/60 flex items-center gap-2 md:text-xs">
+      <label className="flex items-center gap-2 text-base-content/60 md:text-xs">
         <input
           type="checkbox"
-          className="toggle toggle-sm toggle-primary"
+          className="toggle toggle-primary toggle-sm"
           onChange={(e) =>
             setShowTitlesAndRating(
               (e.target as HTMLInputElement).checked,
@@ -140,7 +140,7 @@ export default function CollageForm(
       <div className="card-actions items-center gap-6">
         <button
           type="button"
-          className="btn btn-primary btn-block transition-all duration-300"
+          className="btn btn-block btn-primary transition-all duration-300"
           onClick={generateCollage}
           disabled={isLoading || !canGenerate}
           data-umami-event="Generate button"

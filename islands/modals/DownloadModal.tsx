@@ -29,7 +29,7 @@ export default function DownloadModal(
       <div className="modal-box sm:max-w-sm">
         <button
           type="button"
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+          className="btn btn-circle btn-ghost btn-sm absolute top-2 right-2"
           onClick={() => setOpen(false)}
         >
           ✕
@@ -39,12 +39,12 @@ export default function DownloadModal(
         <p className="py-4">Get more out of boxdgrid on Telegram:</p>
 
         <a
-          className="btn btn-block bg-sky-600 text-white border-sky-600"
+          className="btn btn-block border-sky-600 bg-sky-600 text-white"
           href="https://t.me/letterboxdgrambot"
           target="_blank"
           rel="noopener"
         >
-          <TelegramIcon className="fill-current w-4 h-4" />
+          <TelegramIcon className="h-4 w-4 fill-current" />
           <span>t.me/letterboxdgram</span>
         </a>
 
@@ -57,7 +57,7 @@ export default function DownloadModal(
         </p>
 
         <a
-          className="btn btn-block bg-indigo-400 text-white border-indigo-400 flex items-center gap-2"
+          className="btn btn-block flex items-center gap-2 border-indigo-400 bg-indigo-400 text-white"
           href="https://ko-fi.com/wfrancescons"
           target="_blank"
           rel="noopener"

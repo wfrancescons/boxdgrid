@@ -8,6 +8,9 @@
     "update": "deno run -A -r jsr:@fresh/update ."
   },
   "lint": {
+    "plugins": [
+      "jsr:@ryu/deno-lint-plugin-tailwindcss"
+    ],
     "rules": {
       "tags": [
         "fresh",

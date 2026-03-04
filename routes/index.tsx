@@ -4,11 +4,11 @@ import App from "@/islands/App.tsx";
 
 export default function Home() {
   return (
-    <div className="min-h-dvh w-full flex flex-col bg items-center">
+    <div className="bg flex min-h-dvh w-full flex-col items-center">
       <Header />
 
-      <main className="flex-1 flex items-center justify-center w-full p-6 min-h-0">
-        <div className="flex flex-col md:flex-row items-center md:items-stretch justify-center gap-6 max-w-3xl w-full min-h-0">
+      <main className="flex min-h-0 w-full flex-1 items-center justify-center p-6">
+        <div className="flex min-h-0 w-full max-w-3xl flex-col items-center justify-center gap-6 md:flex-row md:items-stretch">
           <App />
         </div>
       </main>

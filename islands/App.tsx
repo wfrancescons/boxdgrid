@@ -26,9 +26,9 @@ export default function App() {
   }, [collage]);
 
   return (
-    <div className="flex flex-col md:flex-row items-stretch justify-center bg-base-300/50 shadow-sm w-full rounded-3xl drop-shadow-2xl overflow-hidden p-3 gap-3 min-h-0">
+    <div className="flex min-h-0 w-full flex-col items-stretch justify-center gap-3 overflow-hidden rounded-3xl bg-base-300/50 p-3 shadow-sm drop-shadow-2xl md:flex-row">
       {/* Form */}
-      <div className="flex flex-col w-full md:max-w-50 shrink-0 p-3 items-center justify-center mx-auto">
+      <div className="mx-auto flex w-full flex-col shrink-0 items-center justify-center p-3 md:max-w-50">
         <CollageForm
           isLoading={isLoading}
           setLoading={setIsLoading}
@@ -44,21 +44,21 @@ export default function App() {
         } min-h-0 md:relative`}
       >
         <div
-          className={`md:absolute md:inset-0 flex flex-1 flex-col w-full bg-base-100/75 rounded-2xl items-center justify-center p-3 min-h-0 overflow-hidden`}
+          className={`flex min-h-0 w-full flex-1 flex-col items-center justify-center overflow-hidden rounded-2xl bg-base-100/75 p-3 md:absolute md:inset-0`}
         >
           {!collage && !isLoading && <WelcomeFigure />}
 
           {isLoading && <LoadingFigure />}
 
           {collage && !isLoading && (
-            <div className="flex flex-1 flex-col items-center justify-between gap-4 w-full min-h-0 overflow-hidden">
-              <h2 className="font-bold shrink-0">
+            <div className="flex min-h-0 w-full flex-1 flex-col items-center justify-between gap-4 overflow-hidden">
+              <h2 className="shrink-0 font-bold">
                 {`Your ${selectedGrid.cols}x${selectedGrid.rows} collage:`}
               </h2>
 
               <div
                 ref={resultRef}
-                className="flex-1 flex items-center justify-center w-full min-h-0"
+                className="flex min-h-0 w-full flex-1 items-center justify-center"
               >
                 <ResultFigure src={collage} />
               </div>

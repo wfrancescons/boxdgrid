@@ -1,6 +1,6 @@
 export default function WelcomeFigure() {
   return (
-    <figure className="flex items-center justify-center h-[65vh]">
+    <figure className="flex h-[65vh] items-center justify-center">
       <img
         src="home-grid.webp"
         alt="Letterboxd collage"

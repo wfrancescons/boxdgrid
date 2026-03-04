@@ -12,11 +12,11 @@ export default function PeriodFilter({ period, setPeriod }: PeriodFilterProps) {
 
   return (
     <fieldset className="fieldset">
-      <legend className="fieldset-legend text-sm font-medium">
+      <legend className="fieldset-legend font-medium text-sm">
         Time Period:
       </legend>
 
-      <div className="flex flex-row gap-2 *:btn *:md:btn-xs *:checked:btn-info *:checked:text-white">
+      <div className="*:btn *:checked:btn-info *:md:btn-xs flex flex-row gap-2 *:checked:text-white">
         <input
           type="radio"
           className="filter-reset"
