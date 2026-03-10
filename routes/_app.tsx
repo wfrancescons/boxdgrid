@@ -29,9 +29,9 @@ export default define.page(function App({ Component }) {
         />
         <meta
           property="og:image"
-          content="https://boxdgrid.deno.dev/og-image.jpg"
+          content="https://boxdgrid.com/og-image.jpg"
         />
-        <meta property="og:url" content="https://boxdgrid.deno.dev/" />
+        <meta property="og:url" content="https://boxdgrid.com/" />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="boxdgrid" />
 
