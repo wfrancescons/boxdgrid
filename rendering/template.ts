@@ -37,6 +37,8 @@ interface GridTemplateProps {
   param?: string | null;
 }
 
+const WATERMARK_URL = "boxdgrid.com";
+
 function createImageElement(
   { src, x, y, width, height }: Omit<ImageElement, "type">,
 ): ImageElement {
@@ -222,8 +224,8 @@ function generateWatermark(
   }
 
   elements.push(createTextElement({
-    text: "boxdgrid.deno.dev",
-    x: data.width - 200,
+    text: WATERMARK_URL,
+    x: data.width - 150,
     y: data.height - 22,
     font: `bold 20px "Noto Sans JP", sans-serif`,
     fillStyle: "#dcdbdc",
@@ -233,7 +235,7 @@ function generateWatermark(
       offsetY: 2,
       blur: 4,
     },
-    maxWidth: 200,
+    maxWidth: 150,
     lineHeight: 20,
   }));
 
