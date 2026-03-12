@@ -26,7 +26,7 @@ export default function App() {
   }, [collage]);
 
   return (
-    <div className="flex min-h-0 w-full flex-col items-stretch justify-center gap-3 overflow-hidden rounded-3xl bg-base-300/50 p-3 shadow-sm drop-shadow-2xl md:flex-row">
+    <div className="flex min-h-0 w-full flex-1 flex-col items-stretch justify-center gap-3 overflow-hidden rounded-3xl bg-base-300/50 p-3 shadow-sm drop-shadow-2xl md:flex-row">
       {/* Form */}
       <div className="mx-auto flex w-full flex-col shrink-0 items-center justify-center p-3 md:max-w-50">
         <CollageForm
@@ -51,14 +51,14 @@ export default function App() {
           {isLoading && <LoadingFigure />}
 
           {collage && !isLoading && (
-            <div className="flex min-h-0 w-full flex-1 flex-col items-center justify-between gap-4 overflow-hidden">
+            <div className="flex min-h-0 w-full flex-1 flex-col items-center justify-between gap-4">
               <h2 className="shrink-0 font-bold">
                 {`Your ${selectedGrid.cols}x${selectedGrid.rows} collage:`}
               </h2>
 
               <div
                 ref={resultRef}
-                className="flex min-h-0 w-full flex-1 items-center justify-center"
+                className="flex min-h-0 flex-1 items-center justify-center"
               >
                 <ResultFigure src={collage} />
               </div>
