@@ -9,14 +9,11 @@ export default define.page(function App({ Component }) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="google" content="notranslate" />
         <title>boxdgrid – Letterboxd Collage Generator</title>
+        <link rel="canonical" href="https://boxdgrid.com/" />
         <meta name="google" content="notranslate" />
         <meta
           name="description"
           content="Create grid-style collages from the films you've logged on Letterboxd. Choose your grid dimensions, display ratings and titles, and share your personalized movie collage with friends. Perfect for showcasing your recent watches, favorites, or themed lists in a visual and organized way."
-        />
-        <meta
-          name="google-site-verification"
-          content="IcY_PH21oBJFheavxicQ_xKuV6KvhYU4EVZPWRBY85Q"
         />
 
         <meta
