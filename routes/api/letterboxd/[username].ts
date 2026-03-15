@@ -15,11 +15,27 @@ async function fetchImageAsDataURI(url: string): Promise<string> {
       return "";
     }
 
-    const buffer = new Uint8Array(await response.arrayBuffer());
-    const base64 = btoa(String.fromCharCode(...buffer));
-    const ext = url.split(".").pop()?.toLowerCase() || "jpg";
+    let mime = response.headers.get("content-type") || "";
 
-    return `data:image/${ext};base64,${base64}`;
+    if (!mime.startsWith("image/")) {
+      const pathname = new URL(url).pathname;
+      let ext = pathname.split(".").pop()?.toLowerCase() || "jpg";
+
+      if (ext === "jpg") ext = "jpeg";
+
+      mime = `image/${ext}`;
+    }
+
+    const buffer = new Uint8Array(await response.arrayBuffer());
+
+    let binary = "";
+    for (const byte of buffer) {
+      binary += String.fromCharCode(byte);
+    }
+
+    const base64 = btoa(binary);
+
+    return `data:${mime};base64,${base64}`;
   } catch (err) {
     console.error("Error fetching image:", err);
     return "";

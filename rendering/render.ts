@@ -89,7 +89,6 @@ async function drawImage(
     ctx.globalCompositeOperation = element.composite || "source-over";
 
     const image = new Image();
-    image.crossOrigin = "anonymous";
     image.src = element.src;
 
     await new Promise<void>((resolve, reject) => {
