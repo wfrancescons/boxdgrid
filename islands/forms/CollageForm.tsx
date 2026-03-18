@@ -25,6 +25,36 @@ function getErrorMessage(res: Response) {
   }
 }
 
+function parseUsername(input: string): string {
+  const value = input.trim();
+
+  try {
+    const url = new URL(value);
+
+    if (!url.hostname.includes("letterboxd.com")) {
+      throw new Error("INVALID_LETTERBOXD_URL");
+    }
+
+    const parts = url.pathname.split("/").filter(Boolean);
+
+    if (parts.length === 0) {
+      throw new Error("INVALID_LETTERBOXD_URL");
+    }
+
+    return parts[0];
+  } catch (err) {
+    if (!(err instanceof TypeError)) {
+      throw err;
+    }
+  }
+
+  if (value.startsWith("@")) {
+    return value.slice(1);
+  }
+
+  return value;
+}
+
 export default function CollageForm(
   { isLoading, setLoading, setCollage, setSelectedGrid }: CollageFormProps,
 ) {
@@ -46,8 +76,10 @@ export default function CollageForm(
     try {
       const param = showTitlesAndRating ? null : "notexts";
 
+      const parsedUsername = parseUsername(username);
+
       const url = new URL(
-        `/api/letterboxd/${username}`,
+        `/api/letterboxd/${parsedUsername}`,
         globalThis.location.origin,
       );
 
@@ -74,6 +106,9 @@ export default function CollageForm(
 
       setCollage(image);
     } catch (err) {
+      if (err instanceof Error && err.message == "INVALID_LETTERBOXD_URL") {
+        return setApiError("Please enter a valid URL");
+      }
       console.error("Erro ao gerar imagem:", err);
     } finally {
       setLoading(false);
@@ -103,7 +138,7 @@ export default function CollageForm(
               type="text"
               className="grow"
               name="letterboxd-username"
-              placeholder="username (no @)"
+              placeholder="username"
               onInput={(e) =>
                 setUsername(
                   (e.target as HTMLInputElement).value.trim(),
