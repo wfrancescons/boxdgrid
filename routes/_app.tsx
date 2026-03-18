@@ -9,23 +9,23 @@ export default define.page(function App({ Component }) {
         <link
           rel="icon"
           type="image/png"
-          href="favicon-96x96.png"
+          href="/favicon-96x96.png"
           sizes="96x96"
         />
         <link
           rel="icon"
           type="image/svg+xml"
-          href="favicon.svg"
+          href="/favicon.svg"
         />
-        <link rel="shortcut icon" href="favicon.ico" />
-        <link href="favicon.ico" rel="icon" sizes="48x48" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link href="/favicon.ico" rel="icon" sizes="48x48" />
         <link
           rel="apple-touch-icon"
           sizes="180x180"
-          href="apple-touch-icon.png"
+          href="/apple-touch-icon.png"
         />
         <meta name="apple-mobile-web-app-title" content="boxdgrid" />
-        <link rel="manifest" href="site.webmanifest" />
+        <link rel="manifest" href="/site.webmanifest" />
         <meta name="google" content="notranslate" />
         <title>boxdgrid – Letterboxd Collage Generator</title>
         <link rel="canonical" href="https://boxdgrid.com/" />
