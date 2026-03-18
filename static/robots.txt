@@ -1,3 +1,5 @@
-User-agent: *
-Disallow: 
-Disallow: /cgi-bin/
+User-Agent: *
+Allow: /
+Disallow: /private/
+
+Sitemap: https://boxdgrid.com/sitemap.xml
