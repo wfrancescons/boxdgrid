@@ -44,7 +44,7 @@ export default function DownloadModal(
               className="size-20 opacity-85"
             />
           </div>
-          <h3 className="font-bold text-xl">Your download is ready!</h3>
+          <h3 className="font-bold text-xl">Your download is ready</h3>
           <div className="flex w-full flex-col gap-4">
             <div>
               <p className="font-bold text-lg">
