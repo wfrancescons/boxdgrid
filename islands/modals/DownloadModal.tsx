@@ -1,4 +1,4 @@
-import TelegramIcon from "@/components/icons/TelegramIcon.tsx";
+import { FileDown, SquareArrowOutUpRight } from "lucide-preact";
 import { useEffect, useRef } from "preact/hooks";
 
 interface DownloadModalProps {
@@ -26,7 +26,7 @@ export default function DownloadModal(
 
   return (
     <dialog ref={dialogRef} className="modal">
-      <div className="modal-box sm:max-w-sm">
+      <div className="modal-box justify-center text-center sm:max-w-sm">
         <button
           type="button"
           className="btn btn-circle btn-ghost btn-sm absolute top-2 right-2"
@@ -35,44 +35,58 @@ export default function DownloadModal(
           ✕
         </button>
 
-        <h3 className="font-bold text-xl">Your download is ready! 🎉</h3>
-        <p className="py-4">Get more out of boxdgrid on Telegram:</p>
-
-        <a
-          className="btn btn-block border-sky-600 bg-sky-600 text-white"
-          href="https://t.me/letterboxdgrambot"
-          target="_blank"
-          rel="noopener"
-        >
-          <TelegramIcon className="h-4 w-4 fill-current" />
-          <span>t.me/letterboxdgram</span>
-        </a>
-
+        <div className="flex w-full flex-col items-center justify-center gap-6">
+          <div className="flex flex-col items-center justify-center gap-2">
+          </div>
+          <div className="flex size-35 items-center justify-center rounded-full bg-cyan-600/10 text-cyan-200">
+            <FileDown
+              strokeWidth={1.5}
+              className="size-20 opacity-85"
+            />
+          </div>
+          <h3 className="font-bold text-xl">Your download is ready!</h3>
+          <div className="flex w-full flex-col gap-4">
+            <div>
+              <p className="font-bold text-lg">
+                This project is free and ad-free!
+              </p>
+              <p>If you can, support me to keep it online:</p>
+            </div>
+            <a
+              className="btn btn-block flex items-center gap-2 border-indigo-400 bg-indigo-400 text-white"
+              href="https://ko-fi.com/wfrancescons"
+              target="_blank"
+              rel="noopener"
+            >
+              <img
+                src="https://storage.ko-fi.com/cdn/cup-border.png"
+                alt="Ko-fi"
+                className="inline-block h-4 w-5"
+              />
+              <span>Support on Ko-fi</span>
+            </a>
+          </div>
+        </div>
         <div className="divider" />
 
-        <p className="pb-4">
-          <span className="font-bold">This project is free and ad-free!</span>
-          {" "}
-          <span>If you can, support boxdgrid to help keep it online:</span>
-        </p>
-
-        <a
-          className="btn btn-block flex items-center gap-2 border-indigo-400 bg-indigo-400 text-white"
-          href="https://ko-fi.com/wfrancescons"
-          target="_blank"
-          rel="noopener"
-        >
-          <img
-            src="https://storage.ko-fi.com/cdn/cup-border.png"
-            alt="Ko-fi"
-            className="inline-block h-4 w-5"
-          />
-          <span>Support on Ko-fi</span>
-        </a>
+        <div className="flex w-full flex-col gap-4">
+          <p className="font-bold">
+            Explore other projects I’ve built:
+          </p>
+          <a
+            className="btn btn-block btn-soft"
+            href="https://wfrancescons.gridme.bio/"
+            target="_blank"
+            rel="noopener"
+          >
+            <SquareArrowOutUpRight strokeWidth={2.5} className="h-4 w-4" />
+            <span>See more projects</span>
+          </a>
+        </div>
       </div>
 
       <form method="dialog" className="modal-backdrop">
-        <button type="button" onClick={() => setOpen(false)}>
+        <button type="submit" onClick={() => setOpen(false)}>
           close
         </button>
       </form>
