@@ -10,7 +10,7 @@ export default function Footer() {
             © {new Date().getFullYear()} -{" "}
             <a
               className="link m-0 p-0 font-semibold"
-              href="https://letterboxd.com/wfrancescons/"
+              href="https://wfrancescons.gridme.bio/"
               target="_blank"
               rel="noopener"
             >
@@ -47,7 +47,7 @@ export default function Footer() {
               <TelegramIcon className="h-6 w-6 fill-current" />
             </a>
             <a
-              href="https://github.com/wfrancescons"
+              href="https://github.com/wfrancescons/boxdgrid"
               target="_blank"
               rel="noopener"
               aria-label="Visit my GitHub profile"
