@@ -1,4 +1,4 @@
-import { FileDown, SquareArrowOutUpRight } from "lucide-preact";
+import { FileDown, LayoutTemplate } from "lucide-preact";
 import { useEffect, useRef } from "preact/hooks";
 
 interface DownloadModalProps {
@@ -53,7 +53,7 @@ export default function DownloadModal(
               <p>If you can, support me to keep it online:</p>
             </div>
             <a
-              className="btn btn-block flex items-center gap-2 border-indigo-400 bg-indigo-400 text-white"
+              className="btn btn-block flex items-center gap-2 border-indigo-600 bg-indigo-600 hover:bg-indigo-600/80 text-white"
               href="https://ko-fi.com/wfrancescons"
               target="_blank"
               rel="noopener"
@@ -70,17 +70,17 @@ export default function DownloadModal(
         <div className="divider" />
 
         <div className="flex w-full flex-col gap-4">
-          <p className="font-bold">
-            Explore other projects I’ve built:
+          <p className="">
+            More projects and where to find me:
           </p>
           <a
-            className="btn btn-block btn-soft"
+            className="btn btn-block border-sky-600 bg-sky-600 hover:bg-sky-600/80"
             href="https://wfrancescons.gridme.bio/"
             target="_blank"
             rel="noopener"
           >
-            <SquareArrowOutUpRight strokeWidth={2.5} className="h-4 w-4" />
-            <span>See more projects</span>
+            <LayoutTemplate strokeWidth={2.5} className="h-4 w-4" />
+            <span>Projects & Socials</span>
           </a>
         </div>
       </div>
