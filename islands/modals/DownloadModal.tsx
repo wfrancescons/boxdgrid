@@ -53,7 +53,7 @@ export default function DownloadModal(
               <p>If you can, support me to keep it online:</p>
             </div>
             <a
-              className="btn btn-block flex items-center gap-2 border-indigo-600 bg-indigo-600 hover:bg-indigo-600/80 text-white"
+              className="btn btn-block flex items-center gap-2 border-indigo-600 bg-indigo-600 text-white hover:bg-indigo-600/80"
               href="https://ko-fi.com/wfrancescons"
               target="_blank"
               rel="noopener"
