@@ -4,15 +4,11 @@ Generate grid-style collages of your latest Letterboxd watches.
 
 [![web](https://img.shields.io/badge/Web-App-green)](https://boxdgrid.com)
 
----
-
-## 📸 Preview
+## Preview
 
 ![boxdgrid screenshot](./docs/screenshot.png)
 
----
-
-## 📖 About
+## About
 
 **boxdgrid** is a web app built with [Deno Fresh](https://fresh.deno.dev) that
 lets you generate grid-style collages using movie posters from your
@@ -21,9 +17,7 @@ lets you generate grid-style collages using movie posters from your
 You can choose different grid sizes and also filter films by a time period (for
 example, the last 30 days).
 
----
-
-## 🚀 Usage
+## Usage
 
 1. Access: https://boxdgrid.com
 2. Enter your Letterboxd username
@@ -31,9 +25,7 @@ example, the last 30 days).
 4. Optionally filter by a time range (e.g. last 30 days)
 5. Generate and download your collage
 
----
-
-## 🛠️ Running locally
+## Running locally
 
 ### Requirements
 
@@ -52,25 +44,19 @@ cd boxdgrid
 deno task dev
 ```
 
----
-
-## 📦 Tech Stack
+## Tech Stack
 
 - Deno Fresh
 - Preact (via Fresh)
 - Tailwind CSS
 - daisyUI
 
----
-
-## 💡 Notes
+## Notes
 
 - Uses public Letterboxd data (no authentication required)
 - Collages are generated dynamically in the browser
 
----
-
-## ❤️ Support
+## Support
 
 If you find this project useful, consider supporting it:
 
