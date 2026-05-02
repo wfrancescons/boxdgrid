@@ -1302,7 +1302,7 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@fresh/core@^2.3.0",
+      "jsr:@fresh/core@^2.3.3",
       "jsr:@fresh/plugin-vite@^1.0.8",
       "jsr:@melvdouc/xml-parser@~0.1.3",
       "npm:@preact/signals@^2.9.0",
