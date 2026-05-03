@@ -1,7 +1,6 @@
 import { Check, Copy, Download } from "lucide-preact";
 import { useState } from "preact/hooks";
-import CopiedModal from "./modals/CopiedModal.tsx";
-import DownloadModal from "./modals/DownloadModal.tsx";
+import SuccessModal from "./modals/SuccessModal.tsx";
 
 interface ResultCardActionsProps {
   imageSrc: string;
@@ -11,8 +10,8 @@ export default function ResultCardActions({
   imageSrc,
 }: ResultCardActionsProps) {
   const [copied, setCopied] = useState<boolean>(false);
-  const [downloadOpen, setDownloadOpen] = useState(false);
-  const [copyOpen, setCopyOpen] = useState(false);
+  const [modalType, setModalType] = useState<"copy" | "download">("copy");
+  const [modalOpen, setModalOpen] = useState(false);
 
   function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -29,7 +28,8 @@ export default function ResultCardActions({
     ]);
 
     await sleep(1500);
-    setCopyOpen(true);
+    setModalType("copy");
+    setModalOpen(true);
 
     await sleep(300);
     setCopied(false);
@@ -41,7 +41,8 @@ export default function ResultCardActions({
     link.href = imageSrc;
     link.click();
     await sleep(500);
-    setDownloadOpen(true);
+    setModalType("download");
+    setModalOpen(true);
   }
 
   return (
@@ -56,7 +57,7 @@ export default function ResultCardActions({
         {copied
           ? <Check strokeWidth={2.5} className="h-4 w-4" />
           : <Copy strokeWidth={2.5} className="h-4 w-4" />}
-        {copied ? "Copied!" : "Copy to Clipboard"}
+        {copied ? "Copied!" : "Copy"}
       </button>
 
       <button
@@ -68,8 +69,11 @@ export default function ResultCardActions({
         <Download strokeWidth={2.5} className="h-4 w-4" />
         Download
       </button>
-      <DownloadModal isOpen={downloadOpen} setOpen={setDownloadOpen} />
-      <CopiedModal isOpen={copyOpen} setOpen={setCopyOpen} />
+      <SuccessModal
+        type={modalType}
+        isOpen={modalOpen}
+        setOpen={setModalOpen}
+      />
     </div>
   );
 }
