@@ -34,13 +34,13 @@ export default function CopiedModal(
       <div className="modal-box justify-center sm:max-w-sm">
         <button
           type="button"
-          className="btn btn-circle btn-ghost btn-sm absolute top-2 right-2"
+          className="btn btn-circle btn-ghost absolute top-2 right-2"
           onClick={() => setOpen(false)}
         >
           ✕
         </button>
 
-        <div className="flex w-full flex-col items-center justify-center gap-4">
+        <div className="flex w-full flex-col items-center justify-center gap-5">
           {type === "copy"
             ? (
               <div className="flex flex-col items-center justify-center gap-4">
@@ -69,9 +69,9 @@ export default function CopiedModal(
               </div>
             )}
 
-          <div className="flex w-full flex-col gap-3 rounded-2xl bg-indigo-500/25 p-4">
+          <div className="flex w-full flex-col gap-2 rounded-2xl bg-yellow-500/25 p-3">
             <div className="flex flex-row items-center justify-center gap-2">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-indigo-500/50 text-indigo-200">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-yellow-500/50 text-yellow-200">
                 <HeartPlus
                   strokeWidth={3}
                   className="size-5 opacity-85"
@@ -87,7 +87,7 @@ export default function CopiedModal(
               </div>
             </div>
             <a
-              className="btn btn-block flex items-center gap-2 border-0 bg-indigo-600 text-white hover:bg-indigo-800"
+              className="btn btn-block flex items-center gap-2 border-0 bg-yellow-600 text-white hover:bg-yellow-800"
               href="https://ko-fi.com/wfrancescons"
               target="_blank"
             >
@@ -118,10 +118,10 @@ export default function CopiedModal(
           </div>
         </div>
 
-        <div className="divider" />
+        <div className="divider mb-2" />
 
         <div className="flex w-full flex-col items-center justify-center gap-2">
-          <p className="opacity-65">
+          <p className="text-sm opacity-65">
             More projects and where to find me:
           </p>
           <a
