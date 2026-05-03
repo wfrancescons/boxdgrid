@@ -8,10 +8,19 @@
     "update": "deno run -A -r jsr:@fresh/update ."
   },
   "lint": {
-    "plugins": ["jsr:@ryu/deno-lint-plugin-tailwindcss"],
-    "rules": { "tags": ["fresh", "recommended"] }
+    "plugins": [
+      "jsr:@ryu/deno-lint-plugin-tailwindcss"
+    ],
+    "rules": {
+      "tags": [
+        "fresh",
+        "recommended"
+      ]
+    }
   },
-  "exclude": ["**/_fresh/*"],
+  "exclude": [
+    "**/_fresh/*"
+  ],
   "imports": {
     "@/": "./",
     "@fresh/plugin-vite": "jsr:@fresh/plugin-vite@^1.0.8",
@@ -28,7 +37,12 @@
     "vite-plugin-lucide-preprocess": "npm:vite-plugin-lucide-preprocess@^1.4.6"
   },
   "compilerOptions": {
-    "lib": ["dom", "dom.asynciterable", "dom.iterable", "deno.ns"],
+    "lib": [
+      "dom",
+      "dom.asynciterable",
+      "dom.iterable",
+      "deno.ns"
+    ],
     "jsx": "precompile",
     "jsxImportSource": "preact",
     "jsxPrecompileSkipElements": [
@@ -47,11 +61,15 @@
       "noscript",
       "template"
     ],
-    "types": ["vite/client"]
+    "types": [
+      "vite/client"
+    ]
   },
   "deploy": {
     "project": "c46d0d83-72ff-411f-b5c6-6f2bd6e9ae3d",
-    "exclude": ["**/node_modules"],
+    "exclude": [
+      "**/node_modules"
+    ],
     "include": [],
     "entrypoint": "main.ts"
   }

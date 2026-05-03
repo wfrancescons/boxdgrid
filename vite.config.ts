@@ -8,7 +8,6 @@ export default defineConfig({
     lucidePreprocess(),
     fresh(),
     tailwindcss(),
-    ,
   ],
   ssr: {
     external: [
