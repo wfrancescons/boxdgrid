@@ -12,7 +12,6 @@ export default function Footer() {
               className="link m-0 p-0 font-semibold"
               href="https://wfrancescons.gridme.bio/"
               target="_blank"
-              rel="noopener"
             >
               Wesley Francescon
             </a>
@@ -25,7 +24,6 @@ export default function Footer() {
           <a
             href="https://ko-fi.com/wfrancescons"
             target="_blank"
-            rel="noopener"
             className="btn btn-outline btn-sm hover:bg-indigo-400"
             aria-label="Support me on Ko-fi"
           >
@@ -41,7 +39,6 @@ export default function Footer() {
             <a
               href="https://t.me/letterboxdgrambot"
               target="_blank"
-              rel="noopener"
               aria-label="Open letterboxdgram on Telegram"
             >
               <TelegramIcon className="h-6 w-6 fill-current" />
@@ -49,7 +46,6 @@ export default function Footer() {
             <a
               href="https://github.com/wfrancescons/boxdgrid"
               target="_blank"
-              rel="noopener"
               aria-label="Visit my GitHub profile"
             >
               <GithubIcon className="h-6 w-6 fill-current" />
