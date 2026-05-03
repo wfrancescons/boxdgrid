@@ -22,17 +22,24 @@ export default function ResultCardActions({
 
     setCopied(true);
 
-    const blob = await (await fetch(imageSrc)).blob();
-    await navigator.clipboard.write([
-      new ClipboardItem({ [blob.type]: blob }),
-    ]);
+    try {
+      const response = await fetch(imageSrc);
+      const blob = await response.blob();
 
-    await sleep(1500);
-    setModalType("copy");
-    setModalOpen(true);
+      await navigator.clipboard.write([
+        new ClipboardItem({ [blob.type]: blob }),
+      ]);
 
-    await sleep(300);
-    setCopied(false);
+      await sleep(1500);
+      setModalType("copy");
+      setModalOpen(true);
+
+      await sleep(300);
+    } catch (err) {
+      console.error("Copy failed:", err);
+    } finally {
+      setCopied(false);
+    }
   }
 
   async function downloadCanvasImage() {
