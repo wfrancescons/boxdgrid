@@ -8,7 +8,9 @@ export default function ResultFigure({ src }: ResultFigureProps) {
       <img
         src={src}
         alt="Letterboxd collage"
-        className="h-full max-h-full w-auto max-w-full rounded-md object-contain"
+        className="h-full max-h-full w-auto max-w-full select-none rounded-md object-contain"
+        onContextMenu={(e) => e.preventDefault()}
+        draggable={false}
       />
     </div>
   );
