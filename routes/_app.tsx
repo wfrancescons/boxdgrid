@@ -65,6 +65,7 @@ export default define.page(function App({ Component }) {
           defer
           src="https://cloud.umami.is/script.js"
           data-website-id="ca4babd8-9261-4409-a918-53e5219b7777"
+          data-performance="true"
         />
       </head>
       <body
