@@ -25,13 +25,20 @@ export default function CopiedModal(
     }
   }, [isOpen]);
 
+  const gradientBg = {
+    "copy": "bg-radial-[at_50%_15%] from-green-500/10 to-85% to-base-100",
+    "download": "bg-radial-[at_50%_15%] from-cyan-500/10 to-85% to-base-100",
+  };
+
   return (
     <dialog
       ref={dialogRef}
       className="modal"
       onClose={() => setOpen(false)}
     >
-      <div className="modal-box justify-center sm:max-w-sm">
+      <div
+        className={`modal-box justify-center sm:max-w-sm ${gradientBg[type]}`}
+      >
         <button
           type="button"
           className="btn btn-circle btn-ghost absolute top-2 right-2"
@@ -44,10 +51,10 @@ export default function CopiedModal(
           {type === "copy"
             ? (
               <div className="flex flex-col items-center justify-center gap-4">
-                <div className="flex size-30 items-center justify-center rounded-full bg-green-600/10 text-green-200">
+                <div className="flex size-20 items-center justify-center rounded-full bg-green-600/10 text-green-200">
                   <ClipboardCheck
-                    strokeWidth={1.5}
-                    className="size-16 opacity-85"
+                    strokeWidth={2}
+                    className="size-12 opacity-85"
                   />
                 </div>
                 <span className="text-center font-bold text-xl">
@@ -57,10 +64,10 @@ export default function CopiedModal(
             )
             : (
               <div className="flex flex-col items-center justify-center gap-4">
-                <div className="flex size-30 items-center justify-center rounded-full bg-cyan-600/10 text-cyan-200">
+                <div className="flex size-20 items-center justify-center rounded-full bg-cyan-600/10 text-cyan-200">
                   <FileDown
-                    strokeWidth={1.5}
-                    className="size-16 opacity-85"
+                    strokeWidth={2}
+                    className="size-12 opacity-85"
                   />
                 </div>
                 <span className="text-center font-bold text-xl">
