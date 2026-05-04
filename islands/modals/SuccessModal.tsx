@@ -26,8 +26,8 @@ export default function CopiedModal(
   }, [isOpen]);
 
   const gradientBg = {
-    "copy": "bg-radial-[at_50%_15%] from-green-500/10 to-85% to-base-100",
-    "download": "bg-radial-[at_50%_15%] from-cyan-500/10 to-85% to-base-100",
+    "copy": "bg-radial-[at_50%_15%] from-green-500/15 to-75% to-base-100",
+    "download": "bg-radial-[at_50%_15%] from-cyan-500/15 to-75% to-base-100",
   };
 
   return (
@@ -78,7 +78,7 @@ export default function CopiedModal(
 
           <div className="flex w-full flex-col gap-2 rounded-2xl bg-yellow-500/25 p-3">
             <div className="flex flex-row items-center justify-center gap-2">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-yellow-500/50 text-yellow-200">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-yellow-500/25 text-yellow-200">
                 <HeartPlus
                   strokeWidth={3}
                   className="size-5 opacity-85"
