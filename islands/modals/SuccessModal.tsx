@@ -1,14 +1,14 @@
 import { ClipboardCheck, FileDown, HeartPlus } from "lucide-preact";
 import { useEffect, useRef } from "preact/hooks";
 
-interface CopiedModalProps {
+interface SuccessModalProps {
   isOpen: boolean;
   type: "copy" | "download";
   setOpen: (value: boolean) => void;
 }
 
 export default function CopiedModal(
-  { isOpen, setOpen, type }: CopiedModalProps,
+  { isOpen, setOpen, type }: SuccessModalProps,
 ) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
