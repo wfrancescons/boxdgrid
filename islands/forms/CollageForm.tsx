@@ -126,7 +126,7 @@ export default function CollageForm(
         </span>
         <div className="flex w-full flex-col gap-1">
           <label
-            className={`input input-border ${
+            className={`input input-border input-lg md:input-md ${
               apiError ? "input-error" : ""
             } flex max-w-none items-center gap-2`}
           >
@@ -175,7 +175,7 @@ export default function CollageForm(
       <div className="card-actions items-center gap-6">
         <button
           type="button"
-          className="btn btn-block btn-primary transition-all duration-300"
+          className="btn btn-block btn-lg btn-primary md:btn-md transition-all duration-300"
           onClick={generateCollage}
           disabled={isLoading || !canGenerate}
           data-umami-event="Generate button"

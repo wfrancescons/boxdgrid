@@ -56,7 +56,7 @@ export default function ResultCardActions({
     <div className="card-actions flex flex-col items-center justify-center gap-2 md:flex-row">
       <button
         type="button"
-        className="btn btn-sm btn-soft gap-2 transition-all duration-500"
+        className="btn btn-md btn-soft md:btn-sm gap-2 transition-all duration-500"
         onClick={copyImageToClipboard}
         disabled={copied}
         data-umami-event="Copy button"
@@ -69,7 +69,7 @@ export default function ResultCardActions({
 
       <button
         type="button"
-        className="btn btn-sm btn-soft gap-2"
+        className="btn btn-md btn-soft md:btn-sm gap-2"
         onClick={downloadCanvasImage}
         data-umami-event="Download button"
       >

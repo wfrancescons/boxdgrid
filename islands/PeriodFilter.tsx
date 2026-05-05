@@ -16,7 +16,7 @@ export default function PeriodFilter({ period, setPeriod }: PeriodFilterProps) {
         Time Period:
       </legend>
 
-      <div className="*:btn *:checked:btn-info *:md:btn-xs flex flex-row gap-2 *:checked:text-white">
+      <div className="*:btn *:checked:btn-info *:md:btn-xs flex flex-row gap-2 *:rounded-full *:checked:text-white">
         <input
           type="radio"
           className="filter-reset"
