@@ -1,5 +1,7 @@
 import { ClipboardCheck, FileDown, HeartPlus } from "lucide-preact";
-import { useEffect, useRef } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
+
+import SupportModal from "./SupportModal.tsx";
 
 interface SuccessModalProps {
   isOpen: boolean;
@@ -7,21 +9,20 @@ interface SuccessModalProps {
   setOpen: (value: boolean) => void;
 }
 
-export default function CopiedModal(
+export default function SuccessModal(
   { isOpen, setOpen, type }: SuccessModalProps,
 ) {
+  const [supportModalOpen, setSupportModalOpen] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
 
-    if (isOpen && !dialog.open) {
-      dialog.showModal();
-    }
-
-    if (!isOpen && dialog.open) {
-      dialog.close();
+    if (isOpen) {
+      if (!dialog.open) dialog.showModal();
+    } else {
+      if (dialog.open) dialog.close();
     }
   }, [isOpen]);
 
@@ -33,11 +34,14 @@ export default function CopiedModal(
   return (
     <dialog
       ref={dialogRef}
-      className="modal"
+      className="md:modal-middle modal modal-bottom"
       onClose={() => setOpen(false)}
+      onCancel={() => setOpen(false)}
     >
       <div
-        className={`modal-box justify-center sm:max-w-sm ${gradientBg[type]}`}
+        className={`modal-box justify-center text-center sm:max-w-sm ${
+          gradientBg[type]
+        }`}
       >
         <button
           type="button"
@@ -57,7 +61,7 @@ export default function CopiedModal(
                     className="size-12 opacity-85"
                   />
                 </div>
-                <span className="text-center font-bold text-xl">
+                <span className="font-bold text-xl">
                   Collage copied to clipboard
                 </span>
               </div>
@@ -70,55 +74,50 @@ export default function CopiedModal(
                     className="size-12 opacity-85"
                   />
                 </div>
-                <span className="text-center font-bold text-xl">
+                <span className="font-bold text-xl">
                   Your download is ready
                 </span>
               </div>
             )}
 
           <div className="flex w-full flex-col gap-2 rounded-2xl bg-yellow-500/25 p-3">
-            <div className="flex flex-row items-center justify-center gap-2">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-yellow-500/25 text-yellow-200">
-                <HeartPlus
-                  strokeWidth={3}
-                  className="size-5 opacity-85"
-                />
-              </div>
-              <div className="opacity-90">
-                <p className="font-bold">
-                  This project is free and ad-free!
-                </p>
-                <p className="text-sm">
-                  If you can, support me to keep it online:
-                </p>
-              </div>
+            <div className="opacity-90">
+              <p className="font-bold">
+                This project is free and ad-free!
+              </p>
+              <p className="text-sm">
+                If you can, support me to keep it online:
+              </p>
             </div>
-            <a
+            <button
+              type="button"
               className="btn btn-block flex items-center gap-2 border-0 bg-yellow-600 text-white hover:bg-yellow-800"
-              href="https://ko-fi.com/wfrancescons"
-              target="_blank"
+              onClick={() => setSupportModalOpen(true)}
             >
-              <img
-                src="https://storage.ko-fi.com/cdn/cup-border.png"
-                alt="Ko-fi"
-                className="inline-block h-4 w-5"
+              <HeartPlus
+                strokeWidth={3}
+                className="size-4"
               />
-              <span>Support on Ko-fi</span>
-            </a>
+              Support this project
+            </button>
+            <SupportModal
+              isOpen={supportModalOpen}
+              setOpen={setSupportModalOpen}
+            />
           </div>
           <div className="flex w-full flex-col items-center justify-center gap-2">
-            <p className="opacity-65">
+            <p className="text-sm opacity-65">
               Get more out of boxdgrid on Telegram:
             </p>
             <a
-              className="btn btn-wide flex items-center gap-2 border-0 bg-sky-600/20 hover:bg-sky-600/90"
+              className="btn btn-wide flex items-center border-0 bg-sky-600/20 hover:bg-sky-600/90"
               href="https://t.me/letterboxdgrambot"
               target="_blank"
             >
               <img
                 src="https://telegram.org/img/WidgetButton_LogoLarge.png"
                 alt="Ko-fi"
-                className="inline-block w-6"
+                className="inline-block w-5"
               />
               <span>t.me/letterboxdgrambot</span>
             </a>

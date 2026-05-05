@@ -1,7 +1,13 @@
-import GithubIcon from "./icons/GithubIcon.tsx";
-import TelegramIcon from "./icons/TelegramIcon.tsx";
+import GithubIcon from "@/components/icons/GithubIcon.tsx";
+import TelegramIcon from "@/components/icons/TelegramIcon.tsx";
+import { HeartPlus } from "lucide-preact";
+import { useState } from "preact/hooks";
+
+import SupportModal from "./modals/SupportModal.tsx";
 
 export default function Footer() {
+  const [supportModalOpen, setSupportModalOpen] = useState(false);
+
   return (
     <footer className="footer md:footer-horizontal items-center bg-base-300/25 py-2 text-neutral-content md:py-4">
       <div className="mx-auto flex w-full max-w-3xl flex-col items-center justify-between gap-4 p-4 md:flex-row">
@@ -21,19 +27,21 @@ export default function Footer() {
           </span>
         </aside>
         <nav className="flex items-center gap-4">
-          <a
-            href="https://ko-fi.com/wfrancescons"
-            target="_blank"
-            className="btn btn-outline btn-sm hover:bg-indigo-400"
-            aria-label="Support me on Ko-fi"
+          <button
+            type="button"
+            className="btn btn-outline btn-sm text-white hover:bg-yellow-600"
+            onClick={() => setSupportModalOpen(true)}
           >
-            <img
-              src="https://storage.ko-fi.com/cdn/cup-border.png"
-              alt="Ko-fi"
-              className="inline-block h-3 w-4"
+            <HeartPlus
+              strokeWidth={3}
+              className="size-4"
             />
-            Support on Ko-fi
-          </a>
+            Support this project
+          </button>
+          <SupportModal
+            isOpen={supportModalOpen}
+            setOpen={setSupportModalOpen}
+          />
           <div className="divider divider-horizontal m-0" />
           <div className="grid grid-flow-col gap-4">
             <a
