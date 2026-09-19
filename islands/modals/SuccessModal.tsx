@@ -113,10 +113,12 @@ export default function SuccessModal(
               className="btn btn-wide flex items-center border-0 bg-sky-600/20 hover:bg-sky-600/90"
               href="https://t.me/letterboxdgrambot"
               target="_blank"
+              data-umami-event="outbound-link-click"
+              data-umami-event-url="https://t.me/letterboxdgrambot"
             >
               <img
                 src="https://telegram.org/img/WidgetButton_LogoLarge.png"
-                alt="Ko-fi"
+                alt="Telegram logo"
                 className="inline-block w-5"
               />
               <span>t.me/letterboxdgrambot</span>
@@ -134,6 +136,8 @@ export default function SuccessModal(
             className="btn btn-soft btn-wide border-0 bg-teal-600/20 hover:bg-teal-600/90"
             href="https://wfrancescons.gridme.bio/"
             target="_blank"
+            data-umami-event="outbound-link-click"
+            data-umami-event-url="https://wfrancescons.gridme.bio/"
           >
             Projects & Socials
           </a>

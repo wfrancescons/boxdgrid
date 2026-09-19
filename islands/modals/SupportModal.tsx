@@ -59,10 +59,12 @@ export default function SupportModal(
               className="btn btn-wide flex items-center gap-2 border-0 bg-teal-600/20 hover:bg-teal-600/90"
               href="https://livepix.gg/wfrancescons"
               target="_blank"
+              data-umami-event="outbound-link-click"
+              data-umami-event-url="https://livepix.gg/wfrancescons"
             >
               <img
                 src="https://static.livepix.gg/favicon-32x32.png"
-                alt="Ko-fi"
+                alt="Live Pix"
                 className="inline-block w-4"
               />
               Pix (LivePix)
@@ -71,6 +73,8 @@ export default function SupportModal(
               className="btn btn-soft btn-wide border-0 bg-indigo-600/20 hover:bg-indigo-600/90"
               href="https://ko-fi.com/wfrancescons"
               target="_blank"
+              data-umami-event="outbound-link-click"
+              data-umami-event-url="https://ko-fi.com/wfrancescons"
             >
               <img
                 src="https://storage.ko-fi.com/cdn/cup-border.png"

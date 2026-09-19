@@ -18,6 +18,8 @@ export default function Footer() {
               className="link m-0 p-0 font-semibold"
               href="https://wfrancescons.gridme.bio/"
               target="_blank"
+              data-umami-event="outbound-link-click"
+              data-umami-event-url="https://wfrancescons.gridme.bio/"
             >
               Wesley Francescon
             </a>
@@ -48,6 +50,8 @@ export default function Footer() {
               href="https://t.me/letterboxdgrambot"
               target="_blank"
               aria-label="Open letterboxdgram on Telegram"
+              data-umami-event="outbound-link-click"
+              data-umami-event-url="https://t.me/letterboxdgrambot"
             >
               <TelegramIcon className="h-6 w-6 fill-current" />
             </a>
@@ -55,6 +59,8 @@ export default function Footer() {
               href="https://github.com/wfrancescons/boxdgrid"
               target="_blank"
               aria-label="Visit my GitHub profile"
+              data-umami-event="outbound-link-click"
+              data-umami-event-url="https://github.com/wfrancescons/boxdgrid"
             >
               <GithubIcon className="h-6 w-6 fill-current" />
             </a>
