@@ -1,6 +1,8 @@
-import { Check, Copy, Download } from "lucide-preact";
-import { useState } from "preact/hooks";
-import SuccessModal from "./modals/SuccessModal.tsx";
+"use client";
+
+import { Check, Copy, Download } from "lucide-react";
+import { useState } from "react";
+import SuccessModal from "./modals/SuccessModal";
 
 interface ResultCardActionsProps {
   imageSrc: string;
@@ -84,3 +86,4 @@ export default function ResultCardActions({
     </div>
   );
 }
+

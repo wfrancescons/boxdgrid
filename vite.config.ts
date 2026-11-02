@@ -1,17 +1,17 @@
-import { fresh } from "@fresh/plugin-vite";
-import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
-import lucidePreprocess from "vite-plugin-lucide-preprocess";
+import vinext from "vinext";
+import { cloudflare } from "@cloudflare/vite-plugin";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [
-    lucidePreprocess(),
-    fresh(),
+    vinext(),
+    cloudflare({
+      viteEnvironment: {
+        name: "rsc",
+        childEnvironments: ["ssr"],
+      },
+    }),
     tailwindcss(),
   ],
-  ssr: {
-    external: [
-      "daisyui",
-    ],
-  },
 });

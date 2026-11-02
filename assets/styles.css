@@ -48,10 +48,10 @@
 
   background-image:
     radial-gradient(
-      circle at 30% 50%,
-      oklch(70% 0.213 47.604) -150%,
-      transparent 35%
-    ),
+    circle at 30% 50%,
+    oklch(70% 0.213 47.604) -150%,
+    transparent 35%
+  ),
     radial-gradient(
     circle at 70% 60%,
     oklch(72% 0.219 149.579) -150%,

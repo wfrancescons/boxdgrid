@@ -1,5 +1,5 @@
-import { Film, Rating } from "../services/letterboxd.ts";
-import { LOGO, REVIEW, REWATCH } from "./images.ts";
+import { Film, Rating } from "../services/letterboxd";
+import { LOGO, REVIEW, REWATCH } from "./images";
 
 import type {
   CanvasElement,
@@ -7,7 +7,7 @@ import type {
   ImageElement,
   RectangleElement,
   TextElement,
-} from "./render.ts";
+} from "./render";
 
 interface Config {
   POSTER_WIDTH: number;

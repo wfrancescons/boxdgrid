@@ -1,9 +1,11 @@
-import { UserRound } from "lucide-preact";
-import { useState } from "preact/hooks";
-import renderCanvas from "../../rendering/render.ts";
-import gridlbTemplate from "../../rendering/template.ts";
-import GridPicker from "../GridPicker.tsx";
-import PeriodFilter from "../PeriodFilter.tsx";
+"use client";
+
+import { UserRound } from "lucide-react";
+import { useState } from "react";
+import renderCanvas from "@/rendering/render";
+import gridlbTemplate from "@/rendering/template";
+import GridPicker from "../GridPicker";
+import PeriodFilter from "../PeriodFilter";
 
 export type Grid = { rows: number; cols: number };
 
@@ -80,7 +82,7 @@ export default function CollageForm(
 
       const url = new URL(
         `/api/letterboxd/${parsedUsername}`,
-        globalThis.location.origin,
+        window.location.origin,
       );
 
       url.searchParams.set("limit", String(rows * cols));
@@ -106,7 +108,7 @@ export default function CollageForm(
 
       setCollage(image);
     } catch (err) {
-      if (err instanceof Error && err.message == "INVALID_LETTERBOXD_URL") {
+      if (err instanceof Error && err.message === "INVALID_LETTERBOXD_URL") {
         return setApiError("Please enter a valid URL");
       }
       console.error("Erro ao gerar imagem:", err);
@@ -139,10 +141,7 @@ export default function CollageForm(
               className="grow"
               name="letterboxd-username"
               placeholder="username"
-              onInput={(e) =>
-                setUsername(
-                  (e.target as HTMLInputElement).value.trim(),
-                )}
+              onChange={(e) => setUsername(e.target.value.trim())}
             />
           </label>
           {apiError && (
@@ -161,10 +160,7 @@ export default function CollageForm(
         <input
           type="checkbox"
           className="toggle toggle-primary toggle-sm"
-          onChange={(e) =>
-            setShowTitlesAndRating(
-              (e.target as HTMLInputElement).checked,
-            )}
+          onChange={(e) => setShowTitlesAndRating(e.target.checked)}
           checked={showTitlesAndRating}
         />
         Show titles and rating
@@ -193,3 +189,4 @@ export default function CollageForm(
     </form>
   );
 }
+

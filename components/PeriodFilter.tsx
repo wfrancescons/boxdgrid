@@ -1,4 +1,6 @@
-import { TargetedEvent } from "preact";
+"use client";
+
+import React from "react";
 
 interface PeriodFilterProps {
   period: string;
@@ -6,7 +8,7 @@ interface PeriodFilterProps {
 }
 
 export default function PeriodFilter({ period, setPeriod }: PeriodFilterProps) {
-  function handleChange(event: TargetedEvent<HTMLInputElement, Event>) {
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setPeriod(event.currentTarget.value);
   }
 
@@ -54,3 +56,4 @@ export default function PeriodFilter({ period, setPeriod }: PeriodFilterProps) {
     </fieldset>
   );
 }
+

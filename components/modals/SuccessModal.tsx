@@ -1,7 +1,9 @@
-import { ClipboardCheck, FileDown, HeartPlus } from "lucide-preact";
-import { useEffect, useRef, useState } from "preact/hooks";
+"use client";
 
-import SupportModal from "./SupportModal.tsx";
+import { ClipboardCheck, FileDown, HeartPlus } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
+import SupportModal from "./SupportModal";
 
 interface SuccessModalProps {
   isOpen: boolean;
@@ -113,6 +115,7 @@ export default function SuccessModal(
               className="btn btn-wide flex items-center border-0 bg-sky-600/20 hover:bg-sky-600/90"
               href="https://t.me/letterboxdgrambot"
               target="_blank"
+              rel="noreferrer"
               data-umami-event="outbound-link-click"
               data-umami-event-url="https://t.me/letterboxdgrambot"
             >
@@ -136,6 +139,7 @@ export default function SuccessModal(
             className="btn btn-soft btn-wide border-0 bg-teal-600/20 hover:bg-teal-600/90"
             href="https://wfrancescons.gridme.bio/"
             target="_blank"
+            rel="noreferrer"
             data-umami-event="outbound-link-click"
             data-umami-event-url="https://wfrancescons.gridme.bio/"
           >
@@ -152,3 +156,4 @@ export default function SuccessModal(
     </dialog>
   );
 }
+

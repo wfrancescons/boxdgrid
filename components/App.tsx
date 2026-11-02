@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from "preact/hooks";
+"use client";
 
-import LoadingFigure from "../components/figures/LoadingFigure.tsx";
-import ResultFigure from "../components/figures/ResultFigure.tsx";
-import WelcomeFigure from "../components/figures/WelcomeFigure.tsx";
-import CollageForm from "./forms/CollageForm.tsx";
-import ResultCardActions from "./ResultCardActions.tsx";
+import { useEffect, useRef, useState } from "react";
+
+import LoadingFigure from "./figures/LoadingFigure";
+import ResultFigure from "./figures/ResultFigure";
+import WelcomeFigure from "./figures/WelcomeFigure";
+import CollageForm from "./forms/CollageForm";
+import ResultCardActions from "./ResultCardActions";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +18,7 @@ export default function App() {
   useEffect(() => {
     if (!resultRef.current) return;
 
-    const isMobile = globalThis.matchMedia("(max-width: 768px)").matches;
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
     if (!isMobile) return;
 
     resultRef.current.scrollIntoView({
@@ -73,3 +75,4 @@ export default function App() {
     </div>
   );
 }
+

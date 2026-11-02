@@ -1,6 +1,6 @@
-import Header from "@/components/Header.tsx";
-import App from "@/islands/App.tsx";
-import Footer from "@/islands/Footer.tsx";
+import Header from "@/components/Header";
+import App from "@/components/App";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -17,3 +17,4 @@ export default function Home() {
     </>
   );
 }
+

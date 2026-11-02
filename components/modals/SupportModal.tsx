@@ -1,14 +1,14 @@
-import { HeartPlus } from "lucide-preact";
-import { useEffect, useRef } from "preact/hooks";
+"use client";
+
+import { HeartPlus } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 interface SupportModalProps {
   isOpen: boolean;
   setOpen: (value: boolean) => void;
 }
 
-export default function SupportModal(
-  { isOpen, setOpen }: SupportModalProps,
-) {
+export default function SupportModal({ isOpen, setOpen }: SupportModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -59,6 +59,7 @@ export default function SupportModal(
               className="btn btn-wide flex items-center gap-2 border-0 bg-teal-600/20 hover:bg-teal-600/90"
               href="https://livepix.gg/wfrancescons"
               target="_blank"
+              rel="noreferrer"
               data-umami-event="outbound-link-click"
               data-umami-event-url="https://livepix.gg/wfrancescons"
             >
@@ -73,6 +74,7 @@ export default function SupportModal(
               className="btn btn-soft btn-wide border-0 bg-indigo-600/20 hover:bg-indigo-600/90"
               href="https://ko-fi.com/wfrancescons"
               target="_blank"
+              rel="noreferrer"
               data-umami-event="outbound-link-click"
               data-umami-event-url="https://ko-fi.com/wfrancescons"
             >
@@ -95,3 +97,4 @@ export default function SupportModal(
     </dialog>
   );
 }
+

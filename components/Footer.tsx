@@ -1,9 +1,11 @@
-import GithubIcon from "@/components/icons/GithubIcon.tsx";
-import TelegramIcon from "@/components/icons/TelegramIcon.tsx";
-import { HeartPlus } from "lucide-preact";
-import { useState } from "preact/hooks";
+"use client";
 
-import SupportModal from "./modals/SupportModal.tsx";
+import GithubIcon from "@/components/icons/GithubIcon";
+import TelegramIcon from "@/components/icons/TelegramIcon";
+import { HeartPlus } from "lucide-react";
+import { useState } from "react";
+
+import SupportModal from "./modals/SupportModal";
 
 export default function Footer() {
   const [supportModalOpen, setSupportModalOpen] = useState(false);
@@ -18,6 +20,7 @@ export default function Footer() {
               className="link m-0 p-0 font-semibold"
               href="https://wfrancescons.gridme.bio/"
               target="_blank"
+              rel="noreferrer"
               data-umami-event="outbound-link-click"
               data-umami-event-url="https://wfrancescons.gridme.bio/"
             >
@@ -49,6 +52,7 @@ export default function Footer() {
             <a
               href="https://t.me/letterboxdgrambot"
               target="_blank"
+              rel="noreferrer"
               aria-label="Open letterboxdgram on Telegram"
               data-umami-event="outbound-link-click"
               data-umami-event-url="https://t.me/letterboxdgrambot"
@@ -58,6 +62,7 @@ export default function Footer() {
             <a
               href="https://github.com/wfrancescons/boxdgrid"
               target="_blank"
+              rel="noreferrer"
               aria-label="Visit my GitHub profile"
               data-umami-event="outbound-link-click"
               data-umami-event-url="https://github.com/wfrancescons/boxdgrid"
@@ -70,3 +75,4 @@ export default function Footer() {
     </footer>
   );
 }
+

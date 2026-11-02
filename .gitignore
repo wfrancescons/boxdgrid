@@ -5,7 +5,12 @@
 .env.production.local
 .env.local
 
-# Fresh build directory
+# Build output
+dist/
+.next/
+.vinext/
+.wrangler/
 _fresh/
-# npm dependencies
+
+# Dependencies
 node_modules/

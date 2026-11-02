@@ -1,4 +1,6 @@
-import { useRef, useState } from "preact/hooks";
+"use client";
+
+import { useRef, useState } from "react";
 
 interface GridSize {
   rows: number;
@@ -57,7 +59,9 @@ export default function GridPicker({ setGrid }: GridPickerProps) {
     setHoverCol(col);
     setGrid(grid);
 
-    if (navigator.vibrate) navigator.vibrate(10);
+    if (typeof navigator !== "undefined" && navigator.vibrate) {
+      navigator.vibrate(10);
+    }
   }
 
   function handleCellEnter(row: number, col: number) {
@@ -82,9 +86,8 @@ export default function GridPicker({ setGrid }: GridPickerProps) {
     return null;
   }
 
-  function handleTouchMove(e: TouchEvent) {
+  function handleTouchMove(e: React.TouchEvent<HTMLDivElement>) {
     if (!isDragging.current) return;
-    e.preventDefault();
 
     const touch = e.touches[0];
     if (!touch) return;
@@ -144,7 +147,6 @@ export default function GridPicker({ setGrid }: GridPickerProps) {
                 onPointerEnter={() =>
                   handleCellEnter(row, col)}
                 onTouchStart={(e) => {
-                  e.preventDefault();
                   isDragging.current = true;
                   handleSelection(row, col);
                 }}
@@ -155,3 +157,4 @@ export default function GridPicker({ setGrid }: GridPickerProps) {
     </div>
   );
 }
+

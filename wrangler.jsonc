@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "boxdgrid",
+  "compatibility_date": "2026-02-12",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "main": "./worker/index.ts",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  }
+}
+

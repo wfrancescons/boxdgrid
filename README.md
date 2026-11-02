@@ -1,4 +1,4 @@
-# <img src="./static/favicon.ico" alt="logo" height="30"> boxdgrid
+# <img src="./public/favicon.ico" alt="logo" height="30"> boxdgrid
 
 Generate grid-style collages of your latest Letterboxd watches.
 
@@ -10,12 +10,9 @@ Generate grid-style collages of your latest Letterboxd watches.
 
 ## About
 
-**boxdgrid** is a web app built with [Deno Fresh](https://fresh.deno.dev) that
-lets you generate grid-style collages using movie posters from your
-[Letterboxd](https://letterboxd.com) account.
+**boxdgrid** is a web app built with [Vinext](https://vinext.dev) (Cloudflare's Vite-based Next.js implementation) running on **Cloudflare Workers** that lets you generate grid-style collages using movie posters from your [Letterboxd](https://letterboxd.com) account.
 
-You can choose different grid sizes and also filter films by a time period (for
-example, the last 30 days).
+You can choose different grid sizes and also filter films by a time period (for example, the last 30 days).
 
 ## Usage
 
@@ -29,27 +26,39 @@ example, the last 30 days).
 
 ### Requirements
 
-- [Deno](https://deno.com) installed (recommended latest version)
+- [Node.js](https://nodejs.org) (v20+)
+- [pnpm](https://pnpm.io)
 
 ### Installation
 
 ```bash
 git clone https://github.com/wfrancescons/boxdgrid.git
 cd boxdgrid
+pnpm install
 ```
 
-### Run the project
+### Run the project locally
 
 ```bash
-deno task dev
+pnpm dev
+```
+
+### Build and Deploy to Cloudflare Workers
+
+```bash
+# Build
+pnpm build
+
+# Deploy via Wrangler
+pnpm deploy
 ```
 
 ## Tech Stack
 
-- Deno Fresh
-- Preact (via Fresh)
-- Tailwind CSS
-- daisyUI
+- **Framework**: [Vinext](https://vinext.dev) (Next.js App Router on Vite)
+- **Deployment & Runtime**: Cloudflare Workers & Wrangler
+- **UI & Styling**: React 19, Tailwind CSS v4, daisyUI v5
+- **Icons**: Lucide React
 
 ## Notes
 
