@@ -23,7 +23,9 @@ function getMeasureContext(): CanvasRenderingContext2D {
     const measureCanvas = document.createElement("canvas");
     measureCanvas.width = 1;
     measureCanvas.height = 1;
-    measureCtx = measureCanvas.getContext("2d")!;
+    measureCtx = measureCanvas.getContext("2d", {
+      willReadFrequently: true,
+    })!;
   }
   return measureCtx;
 }
@@ -36,7 +38,9 @@ function getVibrancyMaskContext(
     vibrancyMaskCanvas = document.createElement("canvas");
     vibrancyMaskCanvas.width = Math.max(width, 256);
     vibrancyMaskCanvas.height = Math.max(height, 128);
-    vibrancyMaskCtx = vibrancyMaskCanvas.getContext("2d")!;
+    vibrancyMaskCtx = vibrancyMaskCanvas.getContext("2d", {
+      willReadFrequently: true,
+    })!;
   } else if (
     vibrancyMaskCanvas.width < width ||
     vibrancyMaskCanvas.height < height
