@@ -125,7 +125,13 @@ function processItem(item: Record<string, any>): DiaryEntry | null {
 }
 
 async function getLetterboxdUserXml(username: string): Promise<string> {
-  const response = await fetch(`https://letterboxd.com/${username}/rss/`);
+  const response = await fetch(`https://letterboxd.com/${username}/rss/`, {
+    // @ts-expect-error - Cloudflare Workers edge caching options
+    cf: {
+      cacheEverything: true,
+      cacheTtl: 120, // 2 minutes cache for user RSS feed
+    },
+  });
 
   if (!response.ok) {
     if (response.status === 404) {

@@ -8,7 +8,13 @@ import {
 
 async function fetchImageAsDataURI(url: string): Promise<string> {
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      // @ts-expect-error - Cloudflare Workers edge caching options
+      cf: {
+        cacheEverything: true,
+        cacheTtl: 86400 * 7, // 7 days (movie posters are immutable)
+      },
+    });
 
     if (!response.ok) {
       console.error("Failed to fetch image:", response.statusText);
@@ -66,40 +72,63 @@ export async function GET(
     );
 
     if (films.length === 0) {
-      return new Response(null, { status: 204 });
-    }
-
-    const result: FilmItem[] = [];
-
-    for (const film of films) {
-      let image = film.film.image;
-
-      if (image) {
-        image = await fetchImageAsDataURI(image);
-      }
-
-      result.push({
-        film: {
-          title: film.film.title,
-          year: film.film.year,
-          image: image ?? "",
+      return new Response(null, {
+        status: 204,
+        headers: {
+          "Cache-Control": "public, max-age=60, s-maxage=120",
         },
-        rating: film.rating,
-        isRewatch: film.isRewatch,
-        review: film.review,
       });
     }
 
-    return NextResponse.json(result);
+    // Parallel fetch all poster images to dramatically reduce Worker CPU / wall-clock execution time
+    const result: FilmItem[] = await Promise.all(
+      films.map(async (film) => {
+        let image = film.film.image;
+
+        if (image) {
+          image = await fetchImageAsDataURI(image);
+        }
+
+        return {
+          film: {
+            title: film.film.title,
+            year: film.film.year,
+            image: image ?? "",
+          },
+          rating: film.rating,
+          isRewatch: film.isRewatch,
+          review: film.review,
+        };
+      }),
+    );
+
+    return NextResponse.json(result, {
+      headers: {
+        "Cache-Control": "public, max-age=120, s-maxage=300, stale-while-revalidate=600",
+      },
+    });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
 
     if (message === "NOT_A_VALID_LETTERBOXD_USER") {
-      return NextResponse.json({ error: message }, { status: 404 });
+      return NextResponse.json(
+        { error: message },
+        {
+          status: 404,
+          headers: {
+            "Cache-Control": "public, max-age=300, s-maxage=600",
+          },
+        },
+      );
     }
 
     if (message === "ZERO_ACTIVITIES") {
-      return new Response(null, { status: 204 });
+      return new Response(null, {
+        status: 204,
+        headers: {
+          "Cache-Control": "public, max-age=60, s-maxage=120",
+        },
+      });
     }
 
     return NextResponse.json(
@@ -108,4 +137,3 @@ export async function GET(
     );
   }
 }
-
