@@ -9,7 +9,6 @@ import {
 async function fetchImageAsDataURI(url: string): Promise<string> {
   try {
     const response = await fetch(url, {
-      // @ts-expect-error - Cloudflare Workers edge caching options
       cf: {
         cacheEverything: true,
         cacheTtl: 86400 * 7, // 7 days (movie posters are immutable)

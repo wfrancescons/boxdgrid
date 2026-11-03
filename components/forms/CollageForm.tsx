@@ -1,5 +1,7 @@
 "use client";
 
+import renderCanvas from "@/rendering/render";
+import gridlbTemplate, { type FilmItem } from "@/rendering/template";
 import {
   Button,
   FieldError,
@@ -7,12 +9,11 @@ import {
   Label,
   Spinner,
   Switch,
+  SwitchGroup,
   TextField,
 } from "@heroui/react";
 import { UserRound } from "lucide-react";
 import { useEffect, useState } from "react";
-import renderCanvas from "@/rendering/render";
-import gridlbTemplate from "@/rendering/template";
 import GridPicker from "../GridPicker";
 import PeriodFilter from "../PeriodFilter";
 
@@ -130,7 +131,7 @@ export default function CollageForm({
 
       const url = new URL(
         `/api/letterboxd/${parsedUsername}`,
-        window.location.origin,
+        globalThis.location.origin,
       );
 
       url.searchParams.set("limit", String(rows * cols));
@@ -148,7 +149,7 @@ export default function CollageForm({
         return;
       }
 
-      const lastFilms = await res.json();
+      const lastFilms = (await res.json()) as FilmItem[];
 
       const template = gridlbTemplate({
         lastFilms,
@@ -188,7 +189,7 @@ export default function CollageForm({
         fullWidth
       >
         <Label>Letterboxd Username:</Label>
-        <InputGroup fullWidth>
+        <InputGroup fullWidth variant="secondary">
           <InputGroup.Prefix>
             <UserRound strokeWidth={2.5} className="size-4 opacity-70" />
           </InputGroup.Prefix>
@@ -199,10 +200,10 @@ export default function CollageForm({
 
       <GridPicker setGrid={setGrid} />
 
-      <div className="flex flex-col gap-2">
+      <SwitchGroup>
         <Switch size="sm" isSelected={showTitles} onChange={setShowTitles}>
           <Switch.Content>
-            <Switch.Control>
+            <Switch.Control className="[--switch-control-bg-checked-hover:var(--success)] [--switch-control-bg-checked:var(--success)]">
               <Switch.Thumb />
             </Switch.Control>
             <Label>Show titles</Label>
@@ -211,13 +212,13 @@ export default function CollageForm({
 
         <Switch size="sm" isSelected={showRatings} onChange={setShowRatings}>
           <Switch.Content>
-            <Switch.Control>
+            <Switch.Control className="[--switch-control-bg-checked-hover:var(--success)] [--switch-control-bg-checked:var(--success)]">
               <Switch.Thumb />
             </Switch.Control>
             <Label>Show ratings & icons</Label>
           </Switch.Content>
         </Switch>
-      </div>
+      </SwitchGroup>
 
       <PeriodFilter period={period} setPeriod={setPeriod} />
 
