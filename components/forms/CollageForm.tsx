@@ -1,13 +1,24 @@
 "use client";
 
+import {
+  Button,
+  FieldError,
+  InputGroup,
+  Label,
+  Spinner,
+  Switch,
+  TextField,
+} from "@heroui/react";
 import { UserRound } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import renderCanvas from "@/rendering/render";
 import gridlbTemplate from "@/rendering/template";
 import GridPicker from "../GridPicker";
 import PeriodFilter from "../PeriodFilter";
 
 export type Grid = { rows: number; cols: number };
+
+const STORAGE_USERNAME_KEY = "boxdgrid:username";
 
 interface CollageFormProps {
   isLoading: boolean;
@@ -57,18 +68,56 @@ function parseUsername(input: string): string {
   return value;
 }
 
-export default function CollageForm(
-  { isLoading, setLoading, setCollage, setSelectedGrid }: CollageFormProps,
-) {
+function resolveOverlayParam(
+  showTitles: boolean,
+  showRatings: boolean,
+): string | null {
+  if (showTitles && showRatings) return null;
+  if (!showTitles && showRatings) return "notitles";
+  if (showTitles && !showRatings) return "noratings";
+  return "notexts";
+}
+
+export default function CollageForm({
+  isLoading,
+  setLoading,
+  setCollage,
+  setSelectedGrid,
+}: CollageFormProps) {
   const [username, setUsername] = useState("");
-  const [showTitlesAndRating, setShowTitlesAndRating] = useState(true);
+  const [showTitles, setShowTitles] = useState(true);
+  const [showRatings, setShowRatings] = useState(true);
   const [grid, setGrid] = useState<Grid>({ rows: 0, cols: 0 });
   const [period, setPeriod] = useState<string>("all");
   const [apiError, setApiError] = useState("");
 
-  const canGenerate = username && grid.rows > 0 && grid.cols > 0;
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_USERNAME_KEY);
+      if (saved) {
+        setUsername(saved);
+      }
+    } catch {
+      // Ignore storage access errors
+    }
+  }, []);
+
+  function handleUsernameChange(value: string) {
+    const trimmed = value.trim();
+    setUsername(trimmed);
+    if (apiError) setApiError("");
+    try {
+      localStorage.setItem(STORAGE_USERNAME_KEY, trimmed);
+    } catch {
+      // Ignore storage access errors
+    }
+  }
+
+  const canGenerate = Boolean(username && grid.rows > 0 && grid.cols > 0);
 
   async function generateCollage() {
+    if (!canGenerate || isLoading) return;
+
     setLoading(true);
     setApiError("");
     setSelectedGrid(grid);
@@ -76,8 +125,7 @@ export default function CollageForm(
     const { rows, cols } = grid;
 
     try {
-      const param = showTitlesAndRating ? null : "notexts";
-
+      const param = resolveOverlayParam(showTitles, showRatings);
       const parsedUsername = parseUsername(username);
 
       const url = new URL(
@@ -95,6 +143,11 @@ export default function CollageForm(
         return;
       }
 
+      if (res.status === 204) {
+        setApiError("No diary entries found");
+        return;
+      }
+
       const lastFilms = await res.json();
 
       const template = gridlbTemplate({
@@ -109,9 +162,11 @@ export default function CollageForm(
       setCollage(image);
     } catch (err) {
       if (err instanceof Error && err.message === "INVALID_LETTERBOXD_URL") {
-        return setApiError("Please enter a valid URL");
+        setApiError("Please enter a valid URL");
+        return;
       }
       console.error("Erro ao gerar imagem:", err);
+      setApiError("Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -119,74 +174,65 @@ export default function CollageForm(
 
   return (
     <form
-      className="flex w-full flex-col gap-3"
-      onSubmit={(e) => e.preventDefault()}
+      className="flex w-full flex-col gap-4"
+      onSubmit={(e) => {
+        e.preventDefault();
+        generateCollage();
+      }}
     >
-      <div className="flex w-full flex-col gap-2">
-        <span className="font-medium text-sm">
-          Letterboxd Username:
-        </span>
-        <div className="flex w-full flex-col gap-1">
-          <label
-            className={`input input-border input-lg md:input-md ${
-              apiError ? "input-error" : ""
-            } flex max-w-none items-center gap-2`}
-          >
-            <UserRound
-              strokeWidth={2.5}
-              className="h-4 w-4 stroke-current opacity-70"
-            />
-            <input
-              type="text"
-              className="grow"
-              name="letterboxd-username"
-              placeholder="username"
-              onChange={(e) => setUsername(e.target.value.trim())}
-            />
-          </label>
-          {apiError && (
-            <div className="label flex-none">
-              <span className="font-bold text-error md:text-xs">
-                {apiError}
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
+      <TextField
+        name="letterboxd-username"
+        value={username}
+        onChange={handleUsernameChange}
+        isInvalid={Boolean(apiError)}
+        fullWidth
+      >
+        <Label>Letterboxd Username:</Label>
+        <InputGroup fullWidth>
+          <InputGroup.Prefix>
+            <UserRound strokeWidth={2.5} className="size-4 opacity-70" />
+          </InputGroup.Prefix>
+          <InputGroup.Input placeholder="username" />
+        </InputGroup>
+        {apiError && <FieldError>{apiError}</FieldError>}
+      </TextField>
 
       <GridPicker setGrid={setGrid} />
 
-      <label className="flex items-center gap-2 text-base-content/60 md:text-xs">
-        <input
-          type="checkbox"
-          className="toggle toggle-primary toggle-sm"
-          onChange={(e) => setShowTitlesAndRating(e.target.checked)}
-          checked={showTitlesAndRating}
-        />
-        Show titles and rating
-      </label>
+      <div className="flex flex-col gap-2">
+        <Switch size="sm" isSelected={showTitles} onChange={setShowTitles}>
+          <Switch.Content>
+            <Switch.Control>
+              <Switch.Thumb />
+            </Switch.Control>
+            <Label>Show titles</Label>
+          </Switch.Content>
+        </Switch>
+
+        <Switch size="sm" isSelected={showRatings} onChange={setShowRatings}>
+          <Switch.Content>
+            <Switch.Control>
+              <Switch.Thumb />
+            </Switch.Control>
+            <Label>Show ratings & icons</Label>
+          </Switch.Content>
+        </Switch>
+      </div>
 
       <PeriodFilter period={period} setPeriod={setPeriod} />
 
-      <div className="card-actions items-center gap-6">
-        <button
-          type="button"
-          className="btn btn-block btn-lg btn-primary md:btn-md transition-all duration-300"
-          onClick={generateCollage}
-          disabled={isLoading || !canGenerate}
-          data-umami-event="Generate button"
-        >
-          {isLoading
-            ? (
-              <>
-                <span className="loading loading-sm loading-spinner" />
-                <span>Generating…</span>
-              </>
-            )
-            : <span>Generate Collage</span>}
-        </button>
-      </div>
+      <Button
+        type="submit"
+        variant="primary"
+        size="md"
+        fullWidth
+        isPending={isLoading}
+        isDisabled={isLoading || !canGenerate}
+        data-umami-event="Generate button"
+      >
+        {isLoading && <Spinner color="current" size="sm" />}
+        {isLoading ? "Generating…" : "Generate Collage"}
+      </Button>
     </form>
   );
 }
-

@@ -1,3 +1,5 @@
+"use client";
+
 interface ResultFigureProps {
   src: string;
 }

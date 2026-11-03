@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@heroui/react";
 import { Check, Copy, Download } from "lucide-react";
 import { useState } from "react";
 import SuccessModal from "./modals/SuccessModal";
@@ -55,29 +56,32 @@ export default function ResultCardActions({
   }
 
   return (
-    <div className="card-actions flex flex-col items-center justify-center gap-2 md:flex-row">
-      <button
-        type="button"
-        className="btn btn-md btn-soft md:btn-sm gap-2 transition-all duration-500"
-        onClick={copyImageToClipboard}
-        disabled={copied}
+    <div className="flex flex-col items-center justify-center gap-2 md:flex-row">
+      <Button
+        variant="secondary"
+        size="sm"
+        onPress={copyImageToClipboard}
+        isDisabled={copied}
         data-umami-event="Copy button"
       >
-        {copied
-          ? <Check strokeWidth={2.5} className="h-4 w-4" />
-          : <Copy strokeWidth={2.5} className="h-4 w-4" />}
+        {copied ? (
+          <Check strokeWidth={2.5} className="size-4" />
+        ) : (
+          <Copy strokeWidth={2.5} className="size-4" />
+        )}
         {copied ? "Copied!" : "Copy"}
-      </button>
+      </Button>
 
-      <button
-        type="button"
-        className="btn btn-md btn-soft md:btn-sm gap-2"
-        onClick={downloadCanvasImage}
+      <Button
+        variant="primary"
+        size="sm"
+        onPress={downloadCanvasImage}
         data-umami-event="Download button"
       >
-        <Download strokeWidth={2.5} className="h-4 w-4" />
+        <Download strokeWidth={2.5} className="size-4" />
         Download
-      </button>
+      </Button>
+
       <SuccessModal
         type={modalType}
         isOpen={modalOpen}
@@ -86,4 +90,3 @@ export default function ResultCardActions({
     </div>
   );
 }
-

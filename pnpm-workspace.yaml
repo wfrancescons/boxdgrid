@@ -2,9 +2,12 @@ packages:
   - '.'
 
 allowBuilds:
+  "@heroui/shared-utils": false
   esbuild: true
   sharp: true
   workerd: true
 
 minimumReleaseAge: 0
 
+patchedDependencies:
+  vitefu: patches/vitefu.patch

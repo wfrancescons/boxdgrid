@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import { Tabs } from "@heroui/react";
 
 interface PeriodFilterProps {
   period: string;
@@ -8,52 +8,35 @@ interface PeriodFilterProps {
 }
 
 export default function PeriodFilter({ period, setPeriod }: PeriodFilterProps) {
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setPeriod(event.currentTarget.value);
-  }
-
   return (
-    <fieldset className="fieldset">
-      <legend className="fieldset-legend font-medium text-sm">
-        Time Period:
-      </legend>
-
-      <div className="*:btn *:checked:btn-info *:md:btn-xs flex flex-row gap-2 *:rounded-full *:checked:text-white">
-        <input
-          type="radio"
-          className="filter-reset"
-          name="period"
-          value="all"
-          aria-label="All"
-          checked={period === "all"}
-          onChange={handleChange}
-        />
-        <input
-          type="radio"
-          name="period"
-          value="7d"
-          aria-label="7d"
-          checked={period === "7d"}
-          onChange={handleChange}
-        />
-        <input
-          type="radio"
-          name="period"
-          value="15d"
-          aria-label="15d"
-          checked={period === "15d"}
-          onChange={handleChange}
-        />
-        <input
-          type="radio"
-          name="period"
-          value="30d"
-          aria-label="30d"
-          checked={period === "30d"}
-          onChange={handleChange}
-        />
-      </div>
-    </fieldset>
+    <div className="flex w-full flex-col gap-1.5">
+      <span className="font-medium text-sm">Time Period:</span>
+      <Tabs
+        selectedKey={period}
+        onSelectionChange={(key) => setPeriod(String(key))}
+        variant="primary"
+      >
+        <Tabs.ListContainer>
+          <Tabs.List aria-label="Time Period">
+            <Tabs.Tab id="all">
+              All
+              <Tabs.Indicator />
+            </Tabs.Tab>
+            <Tabs.Tab id="7d">
+              7d
+              <Tabs.Indicator />
+            </Tabs.Tab>
+            <Tabs.Tab id="15d">
+              15d
+              <Tabs.Indicator />
+            </Tabs.Tab>
+            <Tabs.Tab id="30d">
+              30d
+              <Tabs.Indicator />
+            </Tabs.Tab>
+          </Tabs.List>
+        </Tabs.ListContainer>
+      </Tabs>
+    </div>
   );
 }
-

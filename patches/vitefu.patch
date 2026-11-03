@@ -1,0 +1,70 @@
+diff --git a/src/index.js b/src/index.js
+index 0edfd6c73c52e233e430290a8221bdc9248dead3..8a933c2d654b96899c546bcfcc81d555864c4b24 100644
+--- a/src/index.js
++++ b/src/index.js
+@@ -27,6 +27,9 @@ if (process.versions.pnp) {
+ 
+ export { isDepIncluded, isDepExcluded, isDepNoExternaled, isDepExternaled }
+ 
++const depPkgPathCache = new Map();
++const jsonCache = new Map();
++
+ /** @type {import('./index.d.ts').crawlFrameworkPkgs} */
+ export async function crawlFrameworkPkgs(options) {
+   const pkgJsonPath = await findClosestPkgJsonPath(options.root)
+@@ -50,6 +53,8 @@ export async function crawlFrameworkPkgs(options) {
+   /** @type {string[]} */
+   let ssrExternal = []
+ 
++  const crawledDepPkgPaths = new Set()
++
+   await crawl(pkgJsonPath, pkgJson)
+ 
+   // respect vite user config
+@@ -113,6 +118,8 @@ export async function crawlFrameworkPkgs(options) {
+    * @param {string[]} [parentDepNames]
+    */
+   async function crawl(pkgJsonPath, pkgJson, parentDepNames = []) {
++    if (crawledDepPkgPaths.has(pkgJsonPath)) return
++    crawledDepPkgPaths.add(pkgJsonPath)
+     const isRoot = parentDepNames.length === 0
+     const crawlDevDependencies = isRoot || isPrivateWorkspacePackage(pkgJsonPath,pkgJson,options.workspaceRoot)
+     /** @type {string[]} */
+@@ -216,6 +223,8 @@ export async function findDepPkgJsonPath(dep, parent) {
+  * @private
+  */
+ async function _findDepPkgJsonPath(dep, parent, usePnpWorkspaceLocators) {
++  const cacheKey = `${parent}::${dep}::${usePnpWorkspaceLocators}`
++  if (depPkgPathCache.has(cacheKey)) return depPkgPathCache.get(cacheKey)
+   if (pnp) {
+     if(usePnpWorkspaceLocators) {
+       try {
+@@ -244,12 +253,15 @@ async function _findDepPkgJsonPath(dep, parent, usePnpWorkspaceLocators) {
+       await fs.access(pkg)
+       // use 'node:fs' version to match 'vite:resolve' and avoid realpath.native quirk
+       // https://github.com/sveltejs/vite-plugin-svelte/issues/525#issuecomment-1355551264
+-      return fsSync.realpathSync(pkg)
++      const result = fsSync.realpathSync(pkg)
++      depPkgPathCache.set(cacheKey, result)
++      return result
+     } catch {}
+     const nextRoot = path.dirname(root)
+     if (nextRoot === root) break
+     root = nextRoot
+   }
++  depPkgPathCache.set(cacheKey, undefined)
+   return undefined
+ }
+ 
+@@ -300,7 +312,10 @@ export async function pkgNeedsOptimization(pkgJson, pkgJsonPath) {
+  * @returns {Promise<Record<string, any>>}
+  */
+ async function readJson(findDepPkgJsonPath) {
+-  return JSON.parse(await fs.readFile(findDepPkgJsonPath, 'utf8'))
++  if (jsonCache.has(findDepPkgJsonPath)) return jsonCache.get(findDepPkgJsonPath)
++  const data = JSON.parse(await fs.readFile(findDepPkgJsonPath, 'utf8'))
++  jsonCache.set(findDepPkgJsonPath, data)
++  return data
+ }
+ 
+ /**

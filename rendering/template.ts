@@ -269,19 +269,19 @@ function generatePosterData(
     return posterElements;
   }
 
-  // 3. Default mode: Full overlay
+  // 3. Default mode: Full overlay (or "noratings" mode: title & year only)
   // Layout:
   // - Bottom: Rating pill (bottom-left) and review/rewatch badges (bottom-right)
   // - Directly above bottom row: Film title
   // - Above title: Release year (if available)
+  const isNoRatings = param === "noratings" || param === "norating";
   posterElements.push(createGradientRectangle(x, y, config));
 
-  const hasBottomRow = Boolean(
-    item.rating?.text || item.review || item.isRewatch,
-  );
+  const hasBottomRow =
+    !isNoRatings && Boolean(item.rating?.text || item.review || item.isRewatch);
 
   // 3.1 Bottom-left: Rating stars on a glass pill background
-  if (item.rating?.text) {
+  if (!isNoRatings && item.rating?.text) {
     const ratingFont = `bold ${config.RATING_FONT_SIZE}px "Noto Sans Symbols", "Noto Sans", sans-serif`;
     const starsWidth = measureText(item.rating.text, ratingFont).width;
 
@@ -327,7 +327,7 @@ function generatePosterData(
   let badgeCenterX =
     x + config.POSTER_WIDTH - config.ICON_MARGIN_RIGHT - glassRadius;
 
-  if (item.review) {
+  if (!isNoRatings && item.review) {
     posterElements.push(
       createGlassCircleElement({
         cx: badgeCenterX,
@@ -356,7 +356,7 @@ function generatePosterData(
     badgeCenterX -= config.GLASS_SIZE + config.GLASS_GAP;
   }
 
-  if (item.isRewatch) {
+  if (!isNoRatings && item.isRewatch) {
     posterElements.push(
       createGlassCircleElement({
         cx: badgeCenterX,

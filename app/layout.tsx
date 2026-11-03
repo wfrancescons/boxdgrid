@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "@/assets/styles.css";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "boxdgrid – Letterboxd Collage Generator",
@@ -45,7 +46,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" translate="no">
+    <html lang="en" translate="no" className="dark">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -64,11 +65,8 @@ export default function RootLayout({
           data-performance="true"
         />
       </head>
-      <body
-        className="bg flex min-h-dvh flex-col items-center"
-        data-theme="letterboxd"
-      >
-        {children}
+      <body className="bg min-h-dvh text-foreground antialiased">
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

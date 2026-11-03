@@ -1,9 +1,10 @@
 "use client";
 
-import GithubIcon from "@/components/icons/GithubIcon";
-import TelegramIcon from "@/components/icons/TelegramIcon";
+import { Button, Link, Separator } from "@heroui/react";
 import { HeartPlus } from "lucide-react";
 import { useState } from "react";
+import GithubIcon from "@/components/icons/GithubIcon";
+import TelegramIcon from "@/components/icons/TelegramIcon";
 
 import SupportModal from "./modals/SupportModal";
 
@@ -11,68 +12,63 @@ export default function Footer() {
   const [supportModalOpen, setSupportModalOpen] = useState(false);
 
   return (
-    <footer className="footer md:footer-horizontal items-center bg-base-300/25 py-2 text-neutral-content md:py-4">
+    <footer className="w-full bg-surface/30 py-2 md:py-4">
       <div className="mx-auto flex w-full max-w-3xl flex-col items-center justify-between gap-4 p-4 md:flex-row">
-        <aside className="flex flex-col items-center gap-1 text-base-content md:items-start">
-          <span>
+        <aside className="flex flex-col items-center gap-1 md:items-start">
+          <span className="text-sm">
             © {new Date().getFullYear()} -{" "}
-            <a
-              className="link m-0 p-0 font-semibold"
+            <Link
               href="https://wfrancescons.gridme.bio/"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               data-umami-event="outbound-link-click"
               data-umami-event-url="https://wfrancescons.gridme.bio/"
             >
               Wesley Francescon
-            </a>
+            </Link>
           </span>
-          <span className="text-base-content/60 text-xs">
+          <span className="text-muted text-xs">
             This project is not associated with Letterboxd.
           </span>
         </aside>
         <nav className="flex items-center gap-4">
-          <button
-            type="button"
-            className="btn btn-outline btn-sm text-white hover:bg-yellow-600"
-            onClick={() => setSupportModalOpen(true)}
+          <Button
+            variant="outline"
+            size="sm"
+            onPress={() => setSupportModalOpen(true)}
           >
-            <HeartPlus
-              strokeWidth={3}
-              className="size-4"
-            />
+            <HeartPlus strokeWidth={3} className="size-4" />
             Support this project
-          </button>
+          </Button>
           <SupportModal
             isOpen={supportModalOpen}
             setOpen={setSupportModalOpen}
           />
-          <div className="divider divider-horizontal m-0" />
+          <Separator orientation="vertical" className="h-6" />
           <div className="grid grid-flow-col gap-4">
-            <a
+            <Link
               href="https://t.me/letterboxdgrambot"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               aria-label="Open letterboxdgram on Telegram"
               data-umami-event="outbound-link-click"
               data-umami-event-url="https://t.me/letterboxdgrambot"
             >
               <TelegramIcon className="h-6 w-6 fill-current" />
-            </a>
-            <a
+            </Link>
+            <Link
               href="https://github.com/wfrancescons/boxdgrid"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               aria-label="Visit my GitHub profile"
               data-umami-event="outbound-link-click"
               data-umami-event-url="https://github.com/wfrancescons/boxdgrid"
             >
               <GithubIcon className="h-6 w-6 fill-current" />
-            </a>
+            </Link>
           </div>
         </nav>
       </div>
     </footer>
   );
 }
-
