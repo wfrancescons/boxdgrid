@@ -58,7 +58,7 @@ export default function ResultCardActions({
   return (
     <div className="flex flex-col items-center justify-center gap-2 md:flex-row">
       <Button
-        variant="secondary"
+        variant="outline"
         size="sm"
         onPress={copyImageToClipboard}
         isDisabled={copied}
@@ -73,7 +73,7 @@ export default function ResultCardActions({
       </Button>
 
       <Button
-        variant="primary"
+        variant="outline"
         size="sm"
         onPress={downloadCanvasImage}
         data-umami-event="Download button"
