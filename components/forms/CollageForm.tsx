@@ -1,15 +1,11 @@
 "use client";
 
-import renderCanvas from "@/rendering/render";
-import gridlbTemplate, { type FilmItem } from "@/rendering/template";
 import {
   Button,
   FieldError,
   InputGroup,
   Label,
   Spinner,
-  Switch,
-  SwitchGroup,
   TextField,
 } from "@heroui/react";
 import { UserRound } from "lucide-react";
@@ -23,74 +19,19 @@ const STORAGE_USERNAME_KEY = "boxdgrid:username";
 
 interface CollageFormProps {
   isLoading: boolean;
-  setLoading: (loading: boolean) => void;
-  setCollage: (collage: string) => void;
-  setSelectedGrid: (grid: Grid) => void;
-}
-
-function getErrorMessage(res: Response) {
-  switch (res.status) {
-    case 404:
-      return "Username not found";
-    case 204:
-      return "No diary entries found";
-    default:
-      return "Something went wrong";
-  }
-}
-
-function parseUsername(input: string): string {
-  const value = input.trim();
-
-  try {
-    const url = new URL(value);
-
-    if (!url.hostname.includes("letterboxd.com")) {
-      throw new Error("INVALID_LETTERBOXD_URL");
-    }
-
-    const parts = url.pathname.split("/").filter(Boolean);
-
-    if (parts.length === 0) {
-      throw new Error("INVALID_LETTERBOXD_URL");
-    }
-
-    return parts[0];
-  } catch (err) {
-    if (!(err instanceof TypeError)) {
-      throw err;
-    }
-  }
-
-  if (value.startsWith("@")) {
-    return value.slice(1);
-  }
-
-  return value;
-}
-
-function resolveOverlayParam(
-  showTitles: boolean,
-  showRatings: boolean,
-): string | null {
-  if (showTitles && showRatings) return null;
-  if (!showTitles && showRatings) return "notitles";
-  if (showTitles && !showRatings) return "noratings";
-  return "notexts";
+  errorMessage?: string | null;
+  onGenerate: (params: { username: string; grid: Grid; period: string }) => void;
 }
 
 export default function CollageForm({
   isLoading,
-  setLoading,
-  setCollage,
-  setSelectedGrid,
+  errorMessage,
+  onGenerate,
 }: CollageFormProps) {
   const [username, setUsername] = useState("");
-  const [showTitles, setShowTitles] = useState(true);
-  const [showRatings, setShowRatings] = useState(true);
   const [grid, setGrid] = useState<Grid>({ rows: 0, cols: 0 });
   const [period, setPeriod] = useState<string>("all");
-  const [apiError, setApiError] = useState("");
+  const [localError, setLocalError] = useState<string>("");
 
   useEffect(() => {
     try {
@@ -106,7 +47,7 @@ export default function CollageForm({
   function handleUsernameChange(value: string) {
     const trimmed = value.trim();
     setUsername(trimmed);
-    if (apiError) setApiError("");
+    if (localError) setLocalError("");
     try {
       localStorage.setItem(STORAGE_USERNAME_KEY, trimmed);
     } catch {
@@ -115,77 +56,22 @@ export default function CollageForm({
   }
 
   const canGenerate = Boolean(username && grid.rows > 0 && grid.cols > 0);
+  const displayError = localError || errorMessage || "";
 
-  async function generateCollage() {
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
     if (!canGenerate || isLoading) return;
-
-    setLoading(true);
-    setApiError("");
-    setSelectedGrid(grid);
-
-    const { rows, cols } = grid;
-
-    try {
-      const param = resolveOverlayParam(showTitles, showRatings);
-      const parsedUsername = parseUsername(username);
-
-      const url = new URL(
-        `/api/letterboxd/${parsedUsername}`,
-        globalThis.location.origin,
-      );
-
-      url.searchParams.set("limit", String(rows * cols));
-      url.searchParams.set("time", period);
-
-      const res = await fetch(url);
-
-      if (!res.ok) {
-        setApiError(getErrorMessage(res));
-        return;
-      }
-
-      if (res.status === 204) {
-        setApiError("No diary entries found");
-        return;
-      }
-
-      const lastFilms = (await res.json()) as FilmItem[];
-
-      const template = gridlbTemplate({
-        lastFilms,
-        columns: cols,
-        rows,
-        param,
-      });
-
-      const image = await renderCanvas(template);
-
-      setCollage(image);
-    } catch (err) {
-      if (err instanceof Error && err.message === "INVALID_LETTERBOXD_URL") {
-        setApiError("Please enter a valid URL");
-        return;
-      }
-      console.error("Erro ao gerar imagem:", err);
-      setApiError("Something went wrong");
-    } finally {
-      setLoading(false);
-    }
+    setLocalError("");
+    onGenerate({ username, grid, period });
   }
 
   return (
-    <form
-      className="flex w-full flex-col gap-4"
-      onSubmit={(e) => {
-        e.preventDefault();
-        generateCollage();
-      }}
-    >
+    <form className="flex w-full flex-col gap-4" onSubmit={handleSubmit}>
       <TextField
         name="letterboxd-username"
         value={username}
         onChange={handleUsernameChange}
-        isInvalid={Boolean(apiError)}
+        isInvalid={Boolean(displayError)}
         fullWidth
       >
         <Label>Letterboxd Username:</Label>
@@ -195,30 +81,10 @@ export default function CollageForm({
           </InputGroup.Prefix>
           <InputGroup.Input placeholder="username" />
         </InputGroup>
-        {apiError && <FieldError>{apiError}</FieldError>}
+        {displayError && <FieldError>{displayError}</FieldError>}
       </TextField>
 
       <GridPicker setGrid={setGrid} />
-
-      <SwitchGroup>
-        <Switch size="sm" isSelected={showTitles} onChange={setShowTitles}>
-          <Switch.Content>
-            <Switch.Control className="[--switch-control-bg-checked-hover:var(--success)] [--switch-control-bg-checked:var(--success)]">
-              <Switch.Thumb />
-            </Switch.Control>
-            <Label>Show titles</Label>
-          </Switch.Content>
-        </Switch>
-
-        <Switch size="sm" isSelected={showRatings} onChange={setShowRatings}>
-          <Switch.Content>
-            <Switch.Control className="[--switch-control-bg-checked-hover:var(--success)] [--switch-control-bg-checked:var(--success)]">
-              <Switch.Thumb />
-            </Switch.Control>
-            <Label>Show ratings & icons</Label>
-          </Switch.Content>
-        </Switch>
-      </SwitchGroup>
 
       <PeriodFilter period={period} setPeriod={setPeriod} />
 

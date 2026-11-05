@@ -17,6 +17,10 @@ export * from "./types";
 export * from "./watermark";
 
 function yieldToEventLoop(): Promise<void> {
+  const g = globalThis as unknown as { scheduler?: { yield?: () => Promise<void> } };
+  if (typeof g.scheduler?.yield === "function") {
+    return g.scheduler.yield();
+  }
   return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
@@ -88,7 +92,7 @@ export default async function renderCanvas(
     }
 
     opsSinceLastYield += isHeavyElement(element) ? 4 : 1;
-    if (opsSinceLastYield >= 16) {
+    if (opsSinceLastYield >= 8) {
       opsSinceLastYield = 0;
       await yieldToEventLoop();
     }

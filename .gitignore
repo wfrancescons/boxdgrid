@@ -11,6 +11,7 @@ dist/
 .vinext/
 .wrangler/
 _fresh/
+*.tsbuildinfo
 
 # Dependencies
 node_modules/
