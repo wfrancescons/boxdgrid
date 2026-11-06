@@ -39,7 +39,9 @@ export default function CollageForm({
       if (saved) {
         setUsername(saved);
       }
-    } catch {}
+    } catch {
+      // ignore
+    }
   }, []);
 
   function handleUsernameChange(value: string) {
@@ -48,7 +50,9 @@ export default function CollageForm({
     if (localError) setLocalError("");
     try {
       localStorage.setItem(STORAGE_USERNAME_KEY, trimmed);
-    } catch {}
+    } catch {
+      // ignore
+    }
   }
 
   const canGenerate = Boolean(username && grid.rows > 0 && grid.cols > 0);

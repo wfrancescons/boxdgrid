@@ -20,19 +20,19 @@ export default function PeriodFilter({ period, setPeriod }: PeriodFilterProps) {
         <Tabs.ListContainer className="w-full">
           <Tabs.List aria-label="Time Period" className="flex w-full p-0.5">
             <Tabs.Tab id="all" className="h-7 flex-1 px-1 text-xs">
-              All
+              ALL
               <Tabs.Indicator />
             </Tabs.Tab>
             <Tabs.Tab id="7d" className="h-7 flex-1 px-1 text-xs">
-              7d
+              7D
               <Tabs.Indicator />
             </Tabs.Tab>
             <Tabs.Tab id="15d" className="h-7 flex-1 px-1 text-xs">
-              15d
+              15D
               <Tabs.Indicator />
             </Tabs.Tab>
             <Tabs.Tab id="30d" className="h-7 flex-1 px-1 text-xs">
-              30d
+              30D
               <Tabs.Indicator />
             </Tabs.Tab>
           </Tabs.List>
