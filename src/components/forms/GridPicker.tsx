@@ -116,6 +116,30 @@ export default function GridPicker({ setGrid }: GridPickerProps) {
     if (cell) handleSelection(cell.row, cell.col);
   }
 
+  const moves: Record<string, [number, number]> = {
+    ArrowUp: [-1, 0],
+    ArrowDown: [1, 0],
+    ArrowLeft: [0, -1],
+    ArrowRight: [0, 1],
+  };
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    const move = moves[e.key];
+    if (!move) return;
+
+    e.preventDefault();
+    const nextRow = Math.min(rows, Math.max(1, (selected.rows || 1) + move[0]));
+    const nextCol = Math.min(cols, Math.max(1, (selected.cols || 1) + move[1]));
+
+    handleSelection(nextRow, nextCol);
+    gridRef.current
+      ?.querySelector<HTMLElement>(`[data-row="${nextRow}"][data-col="${nextCol}"]`)
+      ?.focus();
+  }
+
+  const activeRow = selected.rows > 0 ? selected.rows : 1;
+  const activeCol = selected.cols > 0 ? selected.cols : 1;
+
   const hoverAnchorColor = hoverRow > 0 && hoverCol > 0
     ? hoverAnchorGrid[hoverRow - 1]?.[hoverCol - 1]
     : null;
@@ -157,6 +181,7 @@ export default function GridPicker({ setGrid }: GridPickerProps) {
         role="grid"
         aria-label="Interactive collage grid selector"
         className="grid touch-none select-none grid-cols-7 gap-1.5 md:gap-1 pt-1"
+        onKeyDown={handleKeyDown}
         onPointerUp={() => (isDragging.current = false)}
         onPointerLeave={() => (isDragging.current = false)}
         onMouseLeave={() => {
@@ -187,7 +212,9 @@ export default function GridPicker({ setGrid }: GridPickerProps) {
               <div
                 key={`${row}-${col}`}
                 role="gridcell"
-                tabIndex={0}
+                tabIndex={row === activeRow && col === activeCol ? 0 : -1}
+                data-row={row}
+                data-col={col}
                 aria-label={`${col} columns by ${row} rows (${col * row} films)`}
                 aria-selected={isSelected}
                 className={`aspect-4/5 cursor-pointer rounded-sm transition hover:scale-105 outline-none focus-visible:ring-2 focus-visible:ring-focus md:rounded-xs ${bg}`}
@@ -200,12 +227,6 @@ export default function GridPicker({ setGrid }: GridPickerProps) {
                 onTouchStart={() => {
                   isDragging.current = true;
                   handleSelection(row, col);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    handleSelection(row, col);
-                  }
                 }}
               />
             );
