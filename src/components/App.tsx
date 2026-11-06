@@ -1,15 +1,15 @@
 "use client";
 
+import { useCollageRenderer } from "@/hooks/useCollageRenderer";
+import { useLetterboxd } from "@/hooks/useLetterboxd";
 import { Card, Drawer, useMediaQuery } from "@heroui/react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import DisplayOptions from "./DisplayOptions";
 import LoadingFigure from "./figures/LoadingFigure";
 import ResultFigure from "./figures/ResultFigure";
 import WelcomeFigure from "./figures/WelcomeFigure";
 import CollageForm, { type Grid } from "./forms/CollageForm";
 import ResultCardActions from "./ResultCardActions";
-import DisplayOptions from "./DisplayOptions";
-import { useLetterboxd } from "@/hooks/useLetterboxd";
-import { useCollageRenderer } from "@/hooks/useCollageRenderer";
 
 interface QueryParams {
   username: string;
@@ -127,9 +127,8 @@ export default function App() {
           </div>
 
           <div
-            className={`min-h-0 flex-1 md:relative md:flex ${
-              isMobile ? "hidden" : collage || isBusyGenerating ? "flex" : "hidden"
-            }`}
+            className={`min-h-0 flex-1 md:relative md:flex ${isMobile ? "hidden" : collage || isBusyGenerating ? "flex" : "hidden"
+              }`}
           >
             <Card
               variant="secondary"
@@ -156,9 +155,8 @@ export default function App() {
 
                     <div
                       ref={resultRef}
-                      className={`flex min-h-0 flex-1 w-full items-center justify-center overflow-hidden transition-opacity duration-200 ${
-                        isRendering ? "opacity-75" : "opacity-100"
-                      }`}
+                      className={`flex min-h-0 flex-1 w-full items-center justify-center overflow-hidden transition-opacity duration-200 ${isRendering ? "opacity-75" : "opacity-100"
+                        }`}
                     >
                       <ResultFigure src={collage} />
                     </div>
@@ -177,10 +175,10 @@ export default function App() {
       {isMobile && (
         <Drawer isOpen={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
           <Drawer.Backdrop variant="blur" isOpen={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-            <Drawer.Content placement="bottom" className="h-[90dvh] max-h-[90dvh] rounded-t-2xl">
-              <Drawer.Dialog className="flex h-full w-full flex-col outline-none p-4 overflow-hidden">
+            <Drawer.Content placement="bottom">
+              <Drawer.Dialog className="flex h-[90dvh] max-h-[90dvh] w-full flex-col outline-none pb-[max(1rem,env(safe-area-inset-bottom))] overflow-hidden rounded-t-2xl">
                 <Drawer.Handle className="shrink-0" />
-                <Drawer.Header className="flex shrink-0 items-center justify-between pb-2 pt-0">
+                <Drawer.Header className="flex flex-row shrink-0 items-center justify-between pb-3">
                   <Drawer.Heading className="font-bold text-sm">
                     {`Your ${selectedGrid.cols}×${selectedGrid.rows} collage`}
                   </Drawer.Heading>
@@ -191,18 +189,16 @@ export default function App() {
                       showRatings={showRatings}
                       setShowRatings={setShowRatings}
                     />
-                    <Drawer.CloseTrigger />
                   </div>
                 </Drawer.Header>
 
-                <Drawer.Body className="flex min-h-0 flex-1 w-full items-center justify-center p-0 overflow-hidden">
+                <Drawer.Body className="flex min-h-0 flex-1 w-full items-center justify-center overflow-hidden">
                   {isBusyGenerating ? (
                     <LoadingFigure />
                   ) : collage ? (
                     <div
-                      className={`flex min-h-0 flex-1 h-full w-full items-center justify-center overflow-hidden transition-opacity duration-200 ${
-                        isRendering ? "opacity-75" : "opacity-100"
-                      }`}
+                      className={`flex min-h-0 flex-1 h-full w-full items-center justify-center overflow-hidden transition-opacity duration-200 ${isRendering ? "opacity-75" : "opacity-100"
+                        }`}
                     >
                       <ResultFigure src={collage} />
                     </div>
