@@ -51,6 +51,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Open letterboxdgram on Telegram"
+              className="opacity-70 hover:opacity-100 transition-opacity"
               data-umami-event="outbound-link-click"
               data-umami-event-url="https://t.me/letterboxdgrambot"
             >
@@ -61,6 +62,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Visit my GitHub profile"
+              className="opacity-70 hover:opacity-100 transition-opacity"
               data-umami-event="outbound-link-click"
               data-umami-event-url="https://github.com/wfrancescons/boxdgrid"
             >

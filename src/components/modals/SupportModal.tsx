@@ -13,7 +13,7 @@ export default function SupportModal({ isOpen, setOpen }: SupportModalProps) {
     <Modal isOpen={isOpen} onOpenChange={setOpen}>
       <Modal.Backdrop variant="blur" isOpen={isOpen} onOpenChange={setOpen}>
         <Modal.Container placement="center" size="xs">
-          <Modal.Dialog>
+          <Modal.Dialog className="overflow-hidden bg-radial-[at_50%_0%] from-amber-500/12 via-transparent to-transparent">
             <Modal.CloseTrigger />
             <Modal.Header className="items-center text-center">
               <Modal.Icon className="bg-warning-soft text-warning-soft-foreground">
@@ -31,37 +31,35 @@ export default function SupportModal({ isOpen, setOpen }: SupportModalProps) {
                   href="https://livepix.gg/wfrancescons"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={buttonVariants({
-                    variant: "secondary",
+                  className={`${buttonVariants({
                     fullWidth: true,
-                  })}
+                  })} flex items-center justify-center gap-2.5 border border-teal-500/30 bg-teal-500/15 text-teal-300 hover:bg-teal-500/25 transition-colors`}
                   data-umami-event="outbound-link-click"
                   data-umami-event-url="https://livepix.gg/wfrancescons"
                 >
                   <img
                     src="https://static.livepix.gg/favicon-32x32.png"
                     alt="Live Pix"
-                    className="inline-block w-4"
+                    className="size-4 shrink-0 rounded-xs"
                   />
-                  Pix (LivePix)
+                  <span>Pix (LivePix)</span>
                 </Link>
                 <Link
                   href="https://ko-fi.com/wfrancescons"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={buttonVariants({
-                    variant: "secondary",
+                  className={`${buttonVariants({
                     fullWidth: true,
-                  })}
+                  })} flex items-center justify-center gap-2.5 border border-indigo-500/30 bg-indigo-500/15 text-indigo-300 hover:bg-indigo-500/25 transition-colors`}
                   data-umami-event="outbound-link-click"
                   data-umami-event-url="https://ko-fi.com/wfrancescons"
                 >
                   <img
                     src="https://storage.ko-fi.com/cdn/cup-border.png"
                     alt="Ko-fi"
-                    className="inline-block w-4"
+                    className="size-4 shrink-0"
                   />
-                  Credit Card (Ko-fi)
+                  <span>Credit Card (Ko-fi)</span>
                 </Link>
               </div>
             </Modal.Body>
