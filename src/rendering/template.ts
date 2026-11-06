@@ -1,0 +1,598 @@
+import {
+  createGlassCircleElement,
+  createGlassPillElement,
+  createIconElement,
+  createImageElement,
+  createRectangleElement,
+  createTextElement,
+  DEFAULT_GLASS_OPTIONS,
+} from "./elements";
+import { getTextLines, measureText } from "./drawers/drawText";
+import { REVIEW, REWATCH } from "./images";
+import type {
+  CanvasElement,
+  CanvasTemplateData,
+  GlassEffectOptions,
+  RectangleElement,
+} from "./types";
+import { createWatermarkElements } from "./watermark";
+
+const FOOTER_HEIGHT = 44;
+const REVIEW_ICON_SRC = REVIEW;
+const REWATCH_ICON_SRC = REWATCH;
+
+export type TemplateConfig = {
+  POSTER_WIDTH: number;
+  POSTER_HEIGHT: number;
+  GRADIENT_HEIGHT: number;
+  ICON_SIZE: number;
+  GLASS_SIZE: number;
+  GLASS_GAP: number;
+  ICON_MARGIN_RIGHT: number;
+  ICON_MARGIN_BOTTOM: number;
+  TEXT_PADDING: number;
+  TEXT_LINE_HEIGHT: number;
+  TITLE_FONT_SIZE: number;
+  YEAR_FONT_SIZE: number;
+  RATING_FONT_SIZE: number;
+  RATING_PILL_HEIGHT: number;
+  RATING_PILL_PADDING_X: number;
+};
+
+export interface FilmItem {
+  film: {
+    title: string;
+    year?: string | number;
+    image?: string;
+    poster?: {
+      large?: string;
+      medium?: string;
+      small?: string;
+      tiny?: string;
+    };
+  };
+  rating?: {
+    text: string | null;
+    score: number;
+  };
+  isRewatch?: boolean;
+  review?: string;
+}
+
+function createGradientRectangle(
+  x: number,
+  y: number,
+  config: TemplateConfig,
+  gradientHeight: number = config.GRADIENT_HEIGHT,
+): RectangleElement {
+  return createRectangleElement({
+    fillStyle: {
+      type: "linearGradient",
+      colors: [
+        { stop: 0, color: "rgba(14, 14, 14, 0)" },
+        { stop: 0.45, color: "rgba(14, 14, 14, 0.3)" },
+        { stop: 1, color: "rgba(14, 14, 14, 0.75)" },
+      ],
+      x0: x,
+      y0: y + config.POSTER_HEIGHT - gradientHeight,
+      x1: x,
+      y1: y + config.POSTER_HEIGHT,
+    },
+    x,
+    y: y + config.POSTER_HEIGHT - gradientHeight,
+    width: config.POSTER_WIDTH,
+    height: gradientHeight,
+  });
+}
+
+function getPosterUrl(item: FilmItem): string | undefined {
+  return (
+    item.film?.image ||
+    item.film?.poster?.large ||
+    item.film?.poster?.medium ||
+    item.film?.poster?.small ||
+    item.film?.poster?.tiny
+  );
+}
+
+function generatePosterData(
+  item: FilmItem,
+  index: number,
+  columns: number,
+  param: string | null,
+  config: TemplateConfig,
+  glassOptions?: GlassEffectOptions,
+): CanvasElement[] {
+  const column = index % columns;
+  const row = Math.floor(index / columns);
+  const x = column * config.POSTER_WIDTH;
+  const y = row * config.POSTER_HEIGHT;
+
+  const posterElements: CanvasElement[] = [];
+
+  const posterUrl = getPosterUrl(item);
+  if (posterUrl) {
+    posterElements.push(
+      createImageElement({
+        src: posterUrl,
+        x,
+        y,
+        width: config.POSTER_WIDTH,
+        height: config.POSTER_HEIGHT,
+      }),
+    );
+  } else {
+    posterElements.push(
+      createRectangleElement({
+        fillStyle: "rgba(0, 0, 0, 0.5)",
+        x,
+        y,
+        width: config.POSTER_WIDTH,
+        height: config.POSTER_HEIGHT,
+      }),
+    );
+  }
+
+  const isClean =
+    param === "notexts" ||
+    param === "notext" ||
+    param === "clean" ||
+    param === "posters" ||
+    param === "minimal" ||
+    param === "nooverlay";
+
+  if (isClean) {
+    return posterElements;
+  }
+
+  const isNoTitles = param === "notitles" || param === "notitle";
+  const glassRadius = config.GLASS_SIZE / 2;
+  const bottomRowCenterY =
+    y + config.POSTER_HEIGHT - config.ICON_MARGIN_BOTTOM - glassRadius;
+
+  if (isNoTitles) {
+    const hasAnyBottomElement = Boolean(
+      item.rating?.text || item.review || item.isRewatch,
+    );
+    if (!hasAnyBottomElement) {
+      return posterElements;
+    }
+
+    posterElements.push(createGradientRectangle(x, y, config, 90));
+
+    if (item.rating?.text) {
+      const ratingFont = `bold ${config.RATING_FONT_SIZE}px "Noto Sans Symbols", "Noto Sans", sans-serif`;
+      const starsWidth = measureText(item.rating.text, ratingFont).width;
+
+      const pillHeight = config.RATING_PILL_HEIGHT;
+      const pillWidth = Math.max(
+        pillHeight,
+        starsWidth + config.RATING_PILL_PADDING_X * 2,
+      );
+      const pillX = x + config.TEXT_PADDING;
+      const pillY = bottomRowCenterY - pillHeight / 2;
+
+      posterElements.push(
+        createGlassPillElement({
+          x: pillX,
+          y: pillY,
+          width: pillWidth,
+          height: pillHeight,
+          options: glassOptions,
+        }),
+      );
+
+      posterElements.push(
+        createTextElement({
+          text: item.rating.text,
+          x: pillX + pillWidth / 2,
+          y: bottomRowCenterY + config.RATING_FONT_SIZE * 0.35,
+          font: ratingFont,
+          fillStyle: "#00e054",
+          align: "center",
+          shadow: {
+            color: "rgba(0, 0, 0, 0.25)",
+            offsetX: 0,
+            offsetY: 1,
+            blur: 4,
+          },
+          maxWidth: pillWidth,
+          lineHeight: config.RATING_FONT_SIZE,
+        }),
+      );
+    }
+
+    let badgeCenterX =
+      x + config.POSTER_WIDTH - config.ICON_MARGIN_RIGHT - glassRadius;
+
+    if (item.review) {
+      posterElements.push(
+        createGlassCircleElement({
+          cx: badgeCenterX,
+          cy: bottomRowCenterY,
+          diameter: config.GLASS_SIZE,
+          options: glassOptions,
+        }),
+      );
+
+      posterElements.push(
+        createIconElement({
+          src: REVIEW_ICON_SRC,
+          x: badgeCenterX - config.ICON_SIZE / 2,
+          y: bottomRowCenterY - config.ICON_SIZE / 2,
+          width: config.ICON_SIZE,
+          height: config.ICON_SIZE,
+          shadow: {
+            color: "rgba(0, 0, 0, 0.5)",
+            offsetX: 0,
+            offsetY: 1,
+            blur: 2,
+          },
+        }),
+      );
+
+      badgeCenterX -= config.GLASS_SIZE + config.GLASS_GAP;
+    }
+
+    if (item.isRewatch) {
+      posterElements.push(
+        createGlassCircleElement({
+          cx: badgeCenterX,
+          cy: bottomRowCenterY,
+          diameter: config.GLASS_SIZE,
+          options: glassOptions,
+        }),
+      );
+
+      posterElements.push(
+        createIconElement({
+          src: REWATCH_ICON_SRC,
+          x: badgeCenterX - config.ICON_SIZE / 2,
+          y: bottomRowCenterY - config.ICON_SIZE / 2,
+          width: config.ICON_SIZE,
+          height: config.ICON_SIZE,
+          shadow: {
+            color: "rgba(0, 0, 0, 0.5)",
+            offsetX: 0,
+            offsetY: 1,
+            blur: 2,
+          },
+        }),
+      );
+    }
+
+    return posterElements;
+  }
+
+  const isNoRatings = param === "noratings" || param === "norating";
+  posterElements.push(createGradientRectangle(x, y, config));
+
+  const hasBottomRow =
+    !isNoRatings && Boolean(item.rating?.text || item.review || item.isRewatch);
+
+  if (!isNoRatings && item.rating?.text) {
+    const ratingFont = `bold ${config.RATING_FONT_SIZE}px "Noto Sans Symbols", "Noto Sans", sans-serif`;
+    const starsWidth = measureText(item.rating.text, ratingFont).width;
+
+    const pillHeight = config.RATING_PILL_HEIGHT;
+    const pillWidth = Math.max(
+      pillHeight,
+      starsWidth + config.RATING_PILL_PADDING_X * 2,
+    );
+    const pillX = x + config.TEXT_PADDING;
+    const pillY = bottomRowCenterY - pillHeight / 2;
+
+    posterElements.push(
+      createGlassPillElement({
+        x: pillX,
+        y: pillY,
+        width: pillWidth,
+        height: pillHeight,
+        options: glassOptions,
+      }),
+    );
+
+    posterElements.push(
+      createTextElement({
+        text: item.rating.text,
+        x: pillX + pillWidth / 2,
+        y: bottomRowCenterY + config.RATING_FONT_SIZE * 0.35,
+        font: ratingFont,
+        fillStyle: "#00e054",
+        align: "center",
+        shadow: {
+          color: "rgba(0, 0, 0, 0.25)",
+          offsetX: 0,
+          offsetY: 1,
+          blur: 4,
+        },
+        maxWidth: pillWidth,
+        lineHeight: config.RATING_FONT_SIZE,
+      }),
+    );
+  }
+
+  let badgeCenterX =
+    x + config.POSTER_WIDTH - config.ICON_MARGIN_RIGHT - glassRadius;
+
+  if (!isNoRatings && item.review) {
+    posterElements.push(
+      createGlassCircleElement({
+        cx: badgeCenterX,
+        cy: bottomRowCenterY,
+        diameter: config.GLASS_SIZE,
+        options: glassOptions,
+      }),
+    );
+
+    posterElements.push(
+      createIconElement({
+        src: REVIEW_ICON_SRC,
+        x: badgeCenterX - config.ICON_SIZE / 2,
+        y: bottomRowCenterY - config.ICON_SIZE / 2,
+        width: config.ICON_SIZE,
+        height: config.ICON_SIZE,
+        shadow: {
+          color: "rgba(0, 0, 0, 0.5)",
+          offsetX: 0,
+          offsetY: 1,
+          blur: 2,
+        },
+      }),
+    );
+
+    badgeCenterX -= config.GLASS_SIZE + config.GLASS_GAP;
+  }
+
+  if (!isNoRatings && item.isRewatch) {
+    posterElements.push(
+      createGlassCircleElement({
+        cx: badgeCenterX,
+        cy: bottomRowCenterY,
+        diameter: config.GLASS_SIZE,
+        options: glassOptions,
+      }),
+    );
+
+    posterElements.push(
+      createIconElement({
+        src: REWATCH_ICON_SRC,
+        x: badgeCenterX - config.ICON_SIZE / 2,
+        y: bottomRowCenterY - config.ICON_SIZE / 2,
+        width: config.ICON_SIZE,
+        height: config.ICON_SIZE,
+        shadow: {
+          color: "rgba(0, 0, 0, 0.5)",
+          offsetX: 0,
+          offsetY: 1,
+          blur: 2,
+        },
+      }),
+    );
+  }
+
+  const titleText = item.film.title;
+  const titleFont = `bold ${config.TITLE_FONT_SIZE}px "Noto Sans", sans-serif`;
+  const titleMaxWidth = config.POSTER_WIDTH - 2 * config.TEXT_PADDING;
+
+  const titleBaselineY = hasBottomRow
+    ? bottomRowCenterY -
+      Math.max(glassRadius, config.RATING_PILL_HEIGHT / 2) -
+      8
+    : y + config.POSTER_HEIGHT - 18;
+
+  const titleLinesCount = Math.max(
+    1,
+    getTextLines(titleText, titleMaxWidth, 2, titleFont).length,
+  );
+
+  posterElements.push(
+    createTextElement({
+      text: titleText,
+      x: x + config.TEXT_PADDING,
+      y: titleBaselineY,
+      font: titleFont,
+      fillStyle: "#ffffff",
+      vibrancy: "primary",
+      shadow: {
+        color: "rgba(0, 0, 0, 0.65)",
+        offsetX: 2,
+        offsetY: 2,
+        blur: 4,
+      },
+      maxWidth: titleMaxWidth,
+      maxLines: 2,
+      lineHeight: config.TEXT_LINE_HEIGHT,
+    }),
+  );
+
+  if (item.film.year) {
+    const firstLineBaselineY =
+      titleBaselineY - (titleLinesCount - 1) * config.TEXT_LINE_HEIGHT;
+    const titleTopY = firstLineBaselineY - config.TITLE_FONT_SIZE;
+    const yearBaselineY = titleTopY - 6;
+
+    posterElements.push(
+      createTextElement({
+        text: String(item.film.year),
+        x: x + config.TEXT_PADDING,
+        y: yearBaselineY,
+        font: `bold ${config.YEAR_FONT_SIZE}px "Noto Sans", sans-serif`,
+        fillStyle: "rgba(255, 255, 255, 0.7)",
+        shadow: {
+          color: "rgba(0, 0, 0, 0.6)",
+          offsetX: 1,
+          offsetY: 1,
+          blur: 3,
+        },
+        maxWidth: titleMaxWidth,
+        lineHeight: config.YEAR_FONT_SIZE,
+      }),
+    );
+  }
+
+  return posterElements;
+}
+
+function generateFooterAmbientBackdrop(
+  lastFilms: FilmItem[],
+  columns: number,
+  rows: number,
+  width: number,
+  height: number,
+  config: TemplateConfig,
+): CanvasElement[] {
+  const elements: CanvasElement[] = [];
+  const postersBottomY = height - FOOTER_HEIGHT;
+
+  for (let col = 0; col < columns; col++) {
+    let bottomFilm: FilmItem | undefined;
+    for (let r = rows - 1; r >= 0; r--) {
+      const candidate = lastFilms[r * columns + col];
+      if (candidate) {
+        bottomFilm = candidate;
+        break;
+      }
+    }
+    if (!bottomFilm && lastFilms.length > 0) {
+      bottomFilm = lastFilms[lastFilms.length - 1];
+    }
+
+    const posterSrc = bottomFilm ? getPosterUrl(bottomFilm) : undefined;
+
+    if (posterSrc) {
+      elements.push(
+        createImageElement({
+          src: posterSrc,
+          x: col * config.POSTER_WIDTH - 24,
+          y: postersBottomY - 30,
+          width: config.POSTER_WIDTH + 48,
+          height: FOOTER_HEIGHT + 60,
+          filter: "blur(32px) saturate(135%) brightness(0.38)",
+          opacity: 0.55,
+        }),
+      );
+    }
+  }
+
+  elements.push(
+    createRectangleElement({
+      x: 0,
+      y: postersBottomY,
+      width,
+      height: FOOTER_HEIGHT,
+      fillStyle: {
+        type: "linearGradient",
+        x0: 0,
+        y0: postersBottomY,
+        x1: 0,
+        y1: height,
+        colors: [
+          { stop: 0, color: "rgba(10, 10, 10, 0.88)" },
+          { stop: 0.45, color: "rgba(12, 12, 12, 0.70)" },
+          { stop: 1, color: "rgba(8, 8, 8, 0.84)" },
+        ],
+      },
+    }),
+    createRectangleElement({
+      x: 0,
+      y: 0,
+      width,
+      height: postersBottomY,
+      fillStyle: "#0E0E0E",
+    }),
+  );
+
+  return elements;
+}
+
+export type GridlbTemplateParams = {
+  lastFilms: FilmItem[];
+  columns: number;
+  rows: number;
+  param?: string | null;
+  glassOptions?: GlassEffectOptions;
+};
+
+export function gridlbTemplate({
+  lastFilms,
+  columns,
+  rows,
+  param = null,
+  glassOptions,
+}: GridlbTemplateParams): CanvasTemplateData {
+  const config: TemplateConfig = {
+    POSTER_WIDTH: 230,
+    POSTER_HEIGHT: 345,
+    GRADIENT_HEIGHT: 185,
+    ICON_SIZE: 15,
+    GLASS_SIZE: 28,
+    GLASS_GAP: 6,
+    ICON_MARGIN_RIGHT: 12,
+    ICON_MARGIN_BOTTOM: 12,
+    TEXT_PADDING: 14,
+    TEXT_LINE_HEIGHT: 18,
+    TITLE_FONT_SIZE: 15,
+    YEAR_FONT_SIZE: 13,
+    RATING_FONT_SIZE: 17,
+    RATING_PILL_HEIGHT: 26,
+    RATING_PILL_PADDING_X: 11,
+  };
+
+  const width = columns * config.POSTER_WIDTH;
+  const height = rows * config.POSTER_HEIGHT + FOOTER_HEIGHT;
+  const postersBottomY = height - FOOTER_HEIGHT;
+
+  const data: CanvasTemplateData = {
+    type: "grid",
+    width,
+    height,
+    background: "#0E0E0E",
+    elements: [],
+  };
+
+  const ambientFooter = generateFooterAmbientBackdrop(
+    lastFilms,
+    columns,
+    rows,
+    width,
+    height,
+    config,
+  );
+  data.elements.push(...ambientFooter);
+
+  lastFilms.forEach((film, i) => {
+    const posterElements = generatePosterData(
+      film,
+      i,
+      columns,
+      param,
+      config,
+      glassOptions,
+    );
+    data.elements.push(...posterElements);
+  });
+
+  data.elements.push(
+    createRectangleElement({
+      x: 0,
+      y: postersBottomY,
+      width,
+      height: 1,
+      fillStyle: "rgba(255, 255, 255, 0.05)",
+    }),
+  );
+
+  const watermark = createWatermarkElements({
+    canvasWidth: width,
+    canvasHeight: height,
+    footerHeight: FOOTER_HEIGHT,
+    singleColumnThreshold: config.POSTER_WIDTH,
+    glassOptions,
+  });
+  data.elements.push(...watermark);
+
+  return data;
+}
+
+export default gridlbTemplate;

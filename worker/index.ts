@@ -10,7 +10,6 @@ export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const method = request.method;
 
-    // Only GET and HEAD requests are cacheable
     if (method !== "GET" && method !== "HEAD") {
       return handler.fetch(request, env, ctx);
     }
@@ -21,16 +20,13 @@ export default {
       return handler.fetch(request, env, ctx);
     }
 
-    // Check Cloudflare Edge Cache first
     const cachedResponse = await cache.match(request);
     if (cachedResponse) {
       return cachedResponse;
     }
 
-    // Execute Vinext handler
     const response = await handler.fetch(request, env, ctx);
 
-    // Cache successful responses in Cloudflare Edge Cache
     if (response.status === 200 || response.status === 204) {
       const isStaticAsset =
         url.pathname.startsWith("/assets/") ||
@@ -51,7 +47,6 @@ export default {
         return staticResponse;
       }
 
-      // For API routes or pages respecting Cache-Control headers
       const cacheControl = response.headers.get("Cache-Control");
       if (
         cacheControl &&

@@ -1,0 +1,216 @@
+"use client";
+
+import { ListBox, Select } from "@heroui/react";
+import { useRef, useState } from "react";
+
+interface GridSize {
+  rows: number;
+  cols: number;
+}
+
+type ColorClass = string;
+type ColorGrid = ColorClass[][];
+
+const rows = 7;
+const cols = 7;
+
+const selectionColors: ColorClass[] = [
+  "bg-cyan-500",
+  "bg-orange-500",
+  "bg-green-500",
+];
+
+const hoverColors: ColorClass[] = [
+  "bg-cyan-200",
+  "bg-orange-200",
+  "bg-green-200",
+];
+
+function pick(arr: ColorClass[]): ColorClass {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+const selectionGrid: ColorGrid = Array.from(
+  { length: rows },
+  () => Array.from({ length: cols }, () => pick(selectionColors)),
+);
+
+const hoverAnchorGrid: ColorGrid = Array.from(
+  { length: rows },
+  () => Array.from({ length: cols }, () => pick(hoverColors)),
+);
+
+interface GridPickerProps {
+  setGrid: (grid: GridSize) => void;
+}
+
+export default function GridPicker({ setGrid }: GridPickerProps) {
+  const [hoverRow, setHoverRow] = useState(0);
+  const [hoverCol, setHoverCol] = useState(0);
+  const [selected, setSelected] = useState<GridSize>({ rows: 0, cols: 0 });
+  const [preset, setPreset] = useState<string>("custom");
+
+  const isDragging = useRef(false);
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  function handleSelection(row: number, col: number) {
+    const grid = { rows: row, cols: col };
+
+    setSelected(grid);
+    setHoverRow(row);
+    setHoverCol(col);
+    setGrid(grid);
+
+    if (col === 4 && row === 3) {
+      setPreset("feed");
+    } else if (col === 3 && row === 4) {
+      setPreset("story");
+    } else {
+      setPreset("custom");
+    }
+
+    if (typeof navigator !== "undefined" && navigator.vibrate) {
+      navigator.vibrate(10);
+    }
+  }
+
+  function handlePresetChange(key: string) {
+    setPreset(key);
+
+    if (key === "feed") {
+      handleSelection(3, 4);
+    } else if (key === "story") {
+      handleSelection(4, 3);
+    }
+  }
+
+  function handleCellEnter(row: number, col: number) {
+    if (isDragging.current) {
+      handleSelection(row, col);
+    } else {
+      setHoverRow(row);
+      setHoverCol(col);
+    }
+  }
+
+  function getCellFromPosition(clientX: number, clientY: number) {
+    if (!gridRef.current) return null;
+
+    const rect = gridRef.current.getBoundingClientRect();
+    const col = Math.ceil(((clientX - rect.left) / rect.width) * cols);
+    const row = Math.ceil(((clientY - rect.top) / rect.height) * rows);
+
+    if (row >= 1 && row <= rows && col >= 1 && col <= cols) {
+      return { row, col };
+    }
+    return null;
+  }
+
+  function handleTouchMove(e: React.TouchEvent<HTMLDivElement>) {
+    if (!isDragging.current) return;
+
+    const touch = e.touches[0];
+    if (!touch) return;
+
+    const cell = getCellFromPosition(touch.clientX, touch.clientY);
+    if (cell) handleSelection(cell.row, cell.col);
+  }
+
+  const hoverAnchorColor = hoverRow > 0 && hoverCol > 0
+    ? hoverAnchorGrid[hoverRow - 1]?.[hoverCol - 1]
+    : null;
+
+  return (
+    <div className="flex w-full flex-col gap-2">
+      <div className="flex items-center justify-between">
+        <p className="font-medium text-sm">
+          Grid: {hoverCol > 0 ? hoverCol : selected.cols} × {hoverRow > 0 ? hoverRow : selected.rows}
+        </p>
+
+        <Select
+          aria-label="Grid Preset"
+          value={preset}
+          onChange={(key) => handlePresetChange(String(key))}
+        >
+          <Select.Trigger>
+            <Select.Value />
+            <Select.Indicator />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox>
+              <ListBox.Item id="feed" textValue="Feed">
+                Feed (4×3)
+              </ListBox.Item>
+              <ListBox.Item id="story" textValue="Story">
+                Story (3×4)
+              </ListBox.Item>
+              <ListBox.Item id="custom" textValue="Custom">
+                Custom
+              </ListBox.Item>
+            </ListBox>
+          </Select.Popover>
+        </Select>
+      </div>
+
+      <div
+        ref={gridRef}
+        role="grid"
+        aria-label="Interactive collage grid selector"
+        className="grid touch-none select-none grid-cols-7 gap-1.5 md:gap-1 pt-1"
+        onPointerUp={() => (isDragging.current = false)}
+        onPointerLeave={() => (isDragging.current = false)}
+        onMouseLeave={() => {
+          if (!isDragging.current) {
+            setHoverRow(selected.rows);
+            setHoverCol(selected.cols);
+          }
+        }}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={() => (isDragging.current = false)}
+      >
+        {Array.from({ length: rows }, (_, i) =>
+          Array.from({ length: cols }, (_, j) => {
+            const row = i + 1;
+            const col = j + 1;
+
+            const isSelected = row <= selected.rows && col <= selected.cols;
+            const isHovered = row <= hoverRow && col <= hoverCol;
+
+            let bg = "bg-neutral-300/30";
+            if (isSelected) {
+              bg = selectionGrid[i][j];
+            } else if (isHovered && hoverAnchorColor) {
+              bg = hoverAnchorColor;
+            }
+
+            return (
+              <div
+                key={`${row}-${col}`}
+                role="gridcell"
+                tabIndex={0}
+                aria-label={`${col} columns by ${row} rows (${col * row} films)`}
+                aria-selected={isSelected}
+                className={`aspect-4/5 cursor-pointer rounded-sm transition hover:scale-105 outline-none focus-visible:ring-2 focus-visible:ring-focus md:rounded-xs ${bg}`}
+                onPointerDown={(e) => {
+                  e.preventDefault();
+                  isDragging.current = true;
+                  handleSelection(row, col);
+                }}
+                onPointerEnter={() => handleCellEnter(row, col)}
+                onTouchStart={() => {
+                  isDragging.current = true;
+                  handleSelection(row, col);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleSelection(row, col);
+                  }
+                }}
+              />
+            );
+          }))}
+      </div>
+    </div>
+  );
+}
